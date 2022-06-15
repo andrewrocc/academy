@@ -1,6 +1,5 @@
 package by.academy.homework1;
 
-import java.awt.event.MouseAdapter;
 import java.util.Scanner;
 
 public class Main {
