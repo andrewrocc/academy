@@ -3,17 +3,19 @@ package by.academy.homework1;
 import java.util.Scanner;
 
 public class Main {
+
+    public static Scanner scan = new Scanner(System.in);
     public static void main(String[] args) {
-        task_1();
-        task_2();
-        task_3();
-        task_4();
+//        task_1();
+//        task_2();
+//        task_3();
+//        task_4();
+        scan.close();
     }
 
     public static void task_1() {
         double price  = 0.0d;
         int age;
-        Scanner scan = new Scanner(System.in);
         System.out.print("Input price(use only ',' as separator): ");
         price = scan.nextDouble();
         System.out.print("Input you age: ");
@@ -37,93 +39,25 @@ public class Main {
     }
 
     public static void task_2() {
-        Scanner scan = new Scanner(System.in);
-        System.out.print("Input value: ");
+        System.out.print("Input value(use space as separator or _): ");
         String value = scan.nextLine();
-        object_type parse_value = null;
-        boolean isParse = false;
-        boolean isUnsupported = true;
+        String[] result_parse = value.split("[ _]+");
 
-        // one of the worst codes you have ever seen
-        for (int i = 0; i < object_type.values().length; i++) {
-            try {
-                Integer.parseInt(value);
-                isParse = true;
-            } catch (NumberFormatException ex) {
-                isParse = false;
-            }
-
-            if (isParse){
-                parse_value = object_type.Int;
+        switch (result_parse[1].substring(0, 1).toUpperCase() + result_parse[1].substring(1)) {
+            case "Int":
+                System.out.println("This is integer value " + Integer.parseInt(result_parse[0]) % 2);
                 break;
-            }
-            else {
-                parse_value = object_type.Unsupported;
-                isUnsupported = false;
-            }
-
-            try {
-                Double.parseDouble(value);
-                isParse = true;
-            } catch (NumberFormatException ex) {
-                isParse = false;
-            }
-            if (isParse) {
-                parse_value = object_type.Double;
+            case "Double":
+                System.out.println("This is double value " + (Double.parseDouble(result_parse[0]) * 7) / 10);
                 break;
-            } else {
-                parse_value = object_type.Unsupported;
-                isUnsupported = false;
-            }
-
-            try {
-                Float.parseFloat(value);
-                isParse = true;
-            } catch (NumberFormatException ex) {
-                isParse = false;
-            }
-            if (isParse) {
-                parse_value = object_type.Float;
+            case "Float":
+                System.out.println("This is float value " + Float.parseFloat(result_parse[0]) * Float.parseFloat(result_parse[0]));
                 break;
-            } else {
-                parse_value = object_type.Unsupported;
-                isUnsupported = false;
-            }
-
-            try {
-                if (value.length() == 1)
-                    isParse = true;
-            } catch (NumberFormatException ex) {
-                isParse = false;
-            }
-            if (isParse) {
-                parse_value = object_type.Char;
+            case "Char":
+                System.out.println("This is char value " + (int) result_parse[0].charAt(0));
                 break;
-            } else {
-                parse_value = object_type.Unsupported;
-                isUnsupported = false;
-            }
-
-            if (!isUnsupported && parse_value.equals(object_type.Unsupported)) {
-                parse_value = object_type.String;
-            }
-        }
-
-        switch (parse_value) {
-            case Int:
-                System.out.println("This is integer value " + Integer.parseInt(value) % 2);
-                break;
-            case Double:
-                System.out.println("This is double value " + (Double.parseDouble(value) * 7) / 10);
-                break;
-            case Float:
-                System.out.println("This is float value " + Float.parseFloat(value) * Float.parseFloat(value));
-                break;
-            case Char:
-                System.out.println("This is char value " + (int) value.charAt(0));
-                break;
-            case String:
-                System.out.println("This is string value - Hello " + value);
+            case "String":
+                System.out.println("This is string value - Hello " + result_parse[0]);
                 break;
             default:
                 System.out.println("Unsupported type!");
@@ -131,7 +65,6 @@ public class Main {
     }
 
     public static void task_3() {
-        Scanner scan = new Scanner(System.in);
         System.out.print("Input number (1 to 10): ");
         int value = scan.nextInt();
         if (value < 0 || value > 11)
@@ -151,13 +84,4 @@ public class Main {
             ++counter;
         }
     }
-}
-
-enum object_type {
-    Int,
-    Double,
-    Float,
-    Char,
-    String,
-    Unsupported;
 }
