@@ -39,7 +39,7 @@ public class Main {
     }
 
     public static void task_2() {
-        System.out.print("Input the type and value of type (use space as separator or _): ");
+        System.out.print("Input the value and value of type (use space as separator or _): ");
         String value = scan.nextLine();
         String[] result_parse = value.split("[ _]+");
 
