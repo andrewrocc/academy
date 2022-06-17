@@ -7,7 +7,7 @@ public class Main {
     public static Scanner scan = new Scanner(System.in);
     public static void main(String[] args) {
 //        task_1();
-//        task_2();
+        task_2();
 //        task_3();
 //        task_4();
         scan.close();
@@ -39,29 +39,19 @@ public class Main {
     }
 
     public static void task_2() {
-        System.out.print("Input value(use space as separator or _): ");
+        System.out.print("Input the type and value of type (use space as separator or _): ");
         String value = scan.nextLine();
         String[] result_parse = value.split("[ _]+");
 
-        switch (result_parse[1].substring(0, 1).toUpperCase() + result_parse[1].substring(1)) {
-            case "Int":
-                System.out.println("This is integer value " + Integer.parseInt(result_parse[0]) % 2);
-                break;
-            case "Double":
-                System.out.println("This is double value " + (Double.parseDouble(result_parse[0]) * 7) / 10);
-                break;
-            case "Float":
-                System.out.println("This is float value " + Float.parseFloat(result_parse[0]) * Float.parseFloat(result_parse[0]));
-                break;
-            case "Char":
-                System.out.println("This is char value " + (int) result_parse[0].charAt(0));
-                break;
-            case "String":
-                System.out.println("This is string value - Hello " + result_parse[0]);
-                break;
-            default:
-                System.out.println("Unsupported type!");
-        }
+        String result = switch(result_parse[1].substring(0, 1).toUpperCase() + result_parse[1].substring(1)) {
+            case "Int" -> "This is integer value " + Integer.parseInt(result_parse[0]) % 2;
+            case "Double" -> "This is double value " + (Double.parseDouble(result_parse[0]) * 7) / 10;
+            case "Float" -> "This is float value " + Float.parseFloat(result_parse[0]) * Float.parseFloat(result_parse[0]);
+            case "Char" -> "This is char value " + (int) result_parse[0].charAt(0);
+            case "String" -> "This is string value - Hello " + result_parse[0];
+            default -> "Unsupported type!";
+        };
+        System.out.println(result);
     }
 
     public static void task_3() {
