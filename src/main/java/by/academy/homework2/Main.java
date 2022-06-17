@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 public class Main {
 
     private static final Scanner scan = new Scanner(System.in);
+
     public static void main(String[] args) {
 //        task_0();
 //        task_1();
@@ -14,6 +15,7 @@ public class Main {
 //        task_4();
         scan.close();
     }
+
     public static void task_0() {
         String[] input_value = scan.nextLine().split(" ");
         int array_size = Integer.parseInt(input_value[0]);
@@ -28,6 +30,7 @@ public class Main {
 
         System.out.println("Number of pairs " + pairs(target_value, array));
     }
+
     private static int pairs(int target_value, int[] array) {
         int pairsCount = 0;
         if (target_value > 0)
@@ -45,6 +48,7 @@ public class Main {
         }
         return  pairsCount;
     }
+
     public static void task_1() {
         String string_one = scan.nextLine();
         String string_two = scan.nextLine();
@@ -70,6 +74,7 @@ public class Main {
 
         System.out.println(list_string_one.isEmpty() && list_string_two.isEmpty());
     }
+
     public static void task_2() {
         String[] input_string = scan.nextLine().split(" ");
         ArrayList<Map<Character, Integer>> list_dic = new ArrayList<>();
@@ -115,6 +120,7 @@ public class Main {
         int index = list_dic.indexOf(result);
         System.out.println(input_string[index]);
     }
+
     public static Map<Character, Integer> getCountUniqueValues(char[] array, Map<Character, Integer> dic) {
         for (char c : array) {
             if (dic.containsKey(c))
@@ -124,10 +130,12 @@ public class Main {
         }
         return dic;
     }
+
     public static void task_3() {
         String[] input_string = scan.nextLine().split(" ");
         System.out.println(input_string[0].substring(0, input_string[0].length() / 2) + input_string[1].substring(input_string[1].length() / 2, input_string[1].length()));
     }
+
     public static void task_4() {
         String[] deck = { "A♣", "2♣", "3♣", "4♣", "5♣", "6♣", "7♣", "8♣", "9♣", "10♣", "J♣", "Q♣", "K♣",
                         "A♦", "2♦", "3♦", "4♦", "5♦", "6♦", "7♦", "8♦", "9♦", "10♦", "J♦", "Q♦", "K♦",
