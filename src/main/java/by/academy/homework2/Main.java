@@ -84,41 +84,22 @@ public class Main {
             Map<Character, Integer> temp = getCountUniqueValues(chars_of_string, new HashMap<>());
             list_dic.add(temp);
         }
-        // task solution key(chars) = max, value(repeats) = max;
-        int sum_values = 0;
-        int sum_keys = 0;
-        int sum_vi1 = 0;
-        int sum_ki1 = 0;
-        int sum_res_values = 0;
-        int sum_res_keys = 0;
-        for (int i = 0; i < list_dic.size() - 1; i++) {
-            for (var map_element : list_dic.get(i).values())
-                sum_values += map_element;
-            sum_keys += list_dic.get(i).size();
-
-            for (var map_element : list_dic.get(i + 1).values())
-                sum_vi1 += map_element;
-            sum_ki1 += list_dic.get(i + 1).size();
-
-            if (sum_keys < sum_ki1 && sum_values < sum_vi1) {
-                sum_res_keys = sum_ki1;
-                sum_res_values = sum_vi1;
-                result.clear();
-                result.putAll(list_dic.get(i + 1));
+        // task solution dic.size()[i] - repeats_elements;
+        int min_value = Integer.MAX_VALUE;
+        for (int i = 0; i < list_dic.size(); i++) {
+            int size_word = input_string[i].length();
+            for (int e : list_dic.get(i).values()) {
+                size_word -= e;
             }
-            else {
+            if (size_word < min_value && size_word >= 2){
+                min_value = size_word;
                 result.clear();
                 result.putAll(list_dic.get(i));
             }
-
-
-            if (list_dic.size() - 1 != i)
-                sum_values = sum_keys = sum_vi1 = sum_ki1 = 0;
         }
-        System.out.println(sum_res_keys + " " + sum_res_values);
-
         int index = list_dic.indexOf(result);
         System.out.println(input_string[index]);
+
     }
 
     public static Map<Character, Integer> getCountUniqueValues(char[] array, Map<Character, Integer> dic) {
