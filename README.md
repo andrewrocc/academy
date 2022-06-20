@@ -1,2 +1,2 @@
 # academy
-java core basic course
+java core course
