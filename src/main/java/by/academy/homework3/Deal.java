@@ -27,73 +27,12 @@ class Deal {
 
     @Override
     public String toString() {
-        return "Deal {" +
-                "productName='" + productName + '\'' +
-                ", productPrice=" + productPrice +
-                ", productCount=" + productCount +
-                ", customer='" + customer + '\'' +
-                ", dateTimeDeal=" + dateTimeDeal +
-                ", commentDeal='" + commentDeal + '\'' +
-                ", totalPrice=" + totalPrice +
-                '}';
+        return String.format("Deal { product name = '%s', " +
+                            "product count = '%d', " +
+                            "customer = '%s', " +
+                            "date time deal = '%tc', " +
+                            "comment deal = '%s', " +
+                            "total price = '%4.2f' }",
+                            productName, productCount, customer, dateTimeDeal, commentDeal, totalPrice);
     }
-
-    //region properties for fields
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public double getProductPrice() {
-        return productPrice;
-    }
-
-    public void setProductPrice(double productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    public short getProductCount() {
-        return productCount;
-    }
-
-    public void setProductCount(short productCount) {
-        this.productCount = productCount;
-    }
-
-    public String getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(String customer) {
-        customer = customer;
-    }
-
-    public Date getDateTimeDeal() {
-        return dateTimeDeal;
-    }
-
-    public void setDateTimeDeal(Date dateTimeDeal) {
-        this.dateTimeDeal = dateTimeDeal;
-    }
-
-    public String getCommentDeal() {
-        return commentDeal;
-    }
-
-    public void setCommentDeal(String commentDeal) {
-        this.commentDeal = commentDeal;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    //endregion
 }
