@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="jmh-core">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/main/resources/lib/jmh-core-1.35.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ideaLibSources/jmh-core-1.35-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -7,9 +7,9 @@ public class Main {
     public static Scanner scan = new Scanner(System.in);
     public static void main(String[] args) {
 //        task_1();
-        task_2();
+//        task_2();
 //        task_3();
-//        task_4();
+        task_4();
         scan.close();
     }
 
@@ -70,8 +70,10 @@ public class Main {
         int counter = 1;
         while (result < upper_bound) {
             result = (int) Math.pow(2, counter);
-            System.out.print(result + " ");
-            ++counter;
+            if (result < upper_bound) {
+                System.out.print(result + " ");
+                ++counter;
+            }
         }
     }
 }
