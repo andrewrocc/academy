@@ -10,9 +10,9 @@ public class Main {
     public static void main(String[] args) {
 //        task_0();
 //        task_1();
-        task_2();
+//        task_2();
 //        task_3();
-//        task_4();
+        task_4();
         scan.close();
     }
 
@@ -50,29 +50,20 @@ public class Main {
     }
 
     public static void task_1() {
-        String string_one = scan.nextLine();
-        String string_two = scan.nextLine();
-        if (string_one.length() != string_two.length()) {
+        char[] string_one = scan.nextLine().toCharArray();
+        char[] string_two = scan.nextLine().toCharArray();
+        if (string_one.length != string_two.length){
             System.out.println("false");
             return;
         }
-        ArrayList<Character> list_string_one = new ArrayList<>(string_one.chars().mapToObj(c -> (char) c).toList());
-        ArrayList<Character> list_string_two = new ArrayList<>(string_two.chars().mapToObj(c -> (char) c).toList());
-        int k;
-        for (int i = 0; i < string_one.length(); i++) {
-            k = i;
-            if (k > list_string_one.size())
-                k = 0;
-            char del_char = list_string_two.get(k);
-            if (list_string_one.contains(del_char)) {
-                list_string_two.remove(Character.valueOf(del_char));
-                list_string_one.remove(Character.valueOf(del_char));
-            }
-            else
-                break;
+        char result = '\u0000';
+        char[] array_result = new char[string_one.length * 2];
+        System.arraycopy(string_one, 0, array_result, 0, string_one.length);
+        System.arraycopy(string_two, 0, array_result, string_one.length, string_two.length);
+        for (char c : array_result) {
+            result ^= c;
         }
-
-        System.out.println(list_string_one.isEmpty() && list_string_two.isEmpty());
+        System.out.println(result == '\u0000');
     }
 
     public static void task_2() {
@@ -143,7 +134,7 @@ public class Main {
         for (var e : player_cards){
             for (var q : e)
                 System.out.print(q + " ");
-            System.out.println();
+            System.out.println('\n');
         }
         System.out.println("Total card in deck = " + deck.length + ". The cards left in the deck: " + (deck.length - player_cards.size() * 5));
     }
