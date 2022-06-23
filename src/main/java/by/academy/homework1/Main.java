@@ -8,8 +8,8 @@ public class Main {
     public static void main(String[] args) {
 //        task_1();
 //        task_2();
-//        task_3();
-        task_4();
+        task_3();
+//        task_4();
         scan.close();
     }
 
@@ -57,8 +57,10 @@ public class Main {
     public static void task_3() {
         System.out.print("Input number (1 to 10): ");
         int value = scan.nextInt();
-        if (value < 0 || value > 11)
+        if (value <= 0 || value > 10) {
             System.out.println("Incorrect value");
+            return;
+        }
         for (int i = 1; i < 11; i++) {
             System.out.println(i + " * " + value + " = " + i * value);
         }
