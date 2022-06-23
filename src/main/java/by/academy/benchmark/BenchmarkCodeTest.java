@@ -2,55 +2,82 @@ package by.academy.benchmark;
 
 import org.openjdk.jmh.annotations.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Thread)
 public class BenchmarkCodeTest {
 
-    @Param({"20"})
-    private int N;
-    private int[][] array;
+    @Param({"12.12.2000", "1234567890"})
+    private String user_date;
+
+    @Param({"false"})
+    private boolean isException;
+
+    @Param({"8"})
+    private byte isException_b;
+
+    private String[] patternsDateFormat;
+
+    private SimpleDateFormat simpleDateFormat;
 
     @Setup
     public void prepare() {
-        array = new int[N][N];
-        int counter = 0;
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[i].length; j++) {
-                array[i][j] = counter++;
-            }
-        }
+        patternsDateFormat = new String[] {"dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy"};
     }
 
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
-    @Warmup(iterations = 2, timeUnit = TimeUnit.NANOSECONDS)
-    @Fork(value = 1)
+    @Measurement(iterations = 5, timeUnit = TimeUnit.SECONDS)
+    @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
+    @Fork(value = 2)
     @OutputTimeUnit(TimeUnit.NANOSECONDS)
-    @Timeout(time = 1, timeUnit = TimeUnit.NANOSECONDS)
-    public int testMethod() {
-        int sum = 0;
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[i].length; j++) {
-                sum += array[i][j];
+    @Timeout(time = 10, timeUnit = TimeUnit.MILLISECONDS)
+    public String byteShift() {
+        if (user_date.length() != 10) {
+            System.out.println("Incorrect date");
+            return "Incorrect date";
+        }
+
+        for (int i = 0; i < patternsDateFormat.length; i++) {
+            simpleDateFormat = new SimpleDateFormat(patternsDateFormat[i]);
+            try {
+                Date date = simpleDateFormat.parse(user_date);
+                break;
+            } catch (ParseException ex) {
+                isException_b <<= 1;
             }
         }
-        return sum;
+
+        return ((isException_b ^ 0b1000) == 0) ? "Incorrect date" : null;
     }
 
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
-    @Warmup(iterations = 5)
-    @Fork(value = 1)
+    @Measurement(iterations = 5, timeUnit = TimeUnit.SECONDS)
+    @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
+    @Fork(value = 2)
     @OutputTimeUnit(TimeUnit.NANOSECONDS)
-    @Timeout(time = 1, timeUnit = TimeUnit.NANOSECONDS)
-    public int testMethod2() {
-        int sum = 0;
-        for (int j = 0; j < array.length; j++) {
-            for (int i = 0; i < array[j].length; i++) {
-                sum += array[i][j];
+    @Timeout(time = 10, timeUnit = TimeUnit.MILLISECONDS)
+    public String booleanState() {
+        if (user_date.length() != 10) {
+            System.out.println("Incorrect date");
+            return "Incorrect date";
+        }
+
+        for (var e : patternsDateFormat) {
+            simpleDateFormat = new SimpleDateFormat(e);
+            try {
+                Date date = simpleDateFormat.parse(user_date);
+                isException = false;
+                break;
+            } catch (ParseException ex) {
+                isException = true;
             }
         }
-        return sum;
+
+        return (isException) ? "Incorrect date" : null;
     }
 }
