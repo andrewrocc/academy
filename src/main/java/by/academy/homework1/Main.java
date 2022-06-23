@@ -65,15 +65,11 @@ public class Main {
     }
 
     public static void task_4() {
-        int upper_bound = 1_000_000;
-        int result = 1;
-        int counter = 1;
-        while (result < upper_bound) {
-            result = (int) Math.pow(2, counter);
-            if (result < upper_bound) {
-                System.out.print(result + " ");
-                ++counter;
-            }
+        int result = 2;
+        int counter = 2;
+        while (result < 1_000_000) {
+            System.out.print(result + " ");
+            result = (int) Math.pow(2, counter++);
         }
     }
 }
