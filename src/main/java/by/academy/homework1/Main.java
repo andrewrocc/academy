@@ -8,8 +8,8 @@ public class Main {
     public static void main(String[] args) {
 //        task_1();
 //        task_2();
-        task_3();
-//        task_4();
+//        task_3();
+        task_4();
         scan.close();
     }
 
@@ -20,7 +20,6 @@ public class Main {
         price = scan.nextDouble();
         System.out.print("Input you age: ");
         age = scan.nextInt();
-        scan.close();
         if (price < 0)
             System.out.println("Incorrect value, price can not be negative.");
         else if (price < 100)
@@ -35,7 +34,6 @@ public class Main {
             System.out.printf("Total price including discount: %.2f%n ", (price - (price * 15) / 100));
         else if (price >= 400)
             System.out.printf("Total price including discount: %.2f%n", (price - (price * 20) / 100));
-        System.out.println("test");
     }
 
     public static void task_2() {
@@ -43,15 +41,15 @@ public class Main {
         String value = scan.nextLine();
         String[] result_parse = value.split("[ _]+");
 
-        String result = switch(result_parse[1].substring(0, 1).toUpperCase() + result_parse[1].substring(1)) {
-            case "Int" -> "This is integer value " + Integer.parseInt(result_parse[0]) % 2;
-            case "Double" -> "This is double value " + (Double.parseDouble(result_parse[0]) * 7) / 10;
-            case "Float" -> "This is float value " + Float.parseFloat(result_parse[0]) * Float.parseFloat(result_parse[0]);
-            case "Char" -> "This is char value " + (int) result_parse[0].charAt(0);
-            case "String" -> "This is string value - Hello " + result_parse[0];
-            default -> "Unsupported type!";
-        };
-        System.out.println(result);
+        System.out.println(
+                switch(result_parse[1].substring(0, 1).toUpperCase() + result_parse[1].substring(1)) {
+                    case "Int" -> "This is integer value " + Integer.parseInt(result_parse[0]) % 2;
+                    case "Double" -> "This is double value " + (Double.parseDouble(result_parse[0]) * 7) / 10;
+                    case "Float" -> "This is float value " + Float.parseFloat(result_parse[0]) * Float.parseFloat(result_parse[0]);
+                    case "Char" -> "This is char value " + (int) result_parse[0].charAt(0);
+                    case "String" -> "This is string value - Hello " + result_parse[0];
+                    default -> "Unsupported type!";
+                });
     }
 
     public static void task_3() {
