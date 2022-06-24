@@ -10,22 +10,13 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 public class BenchmarkCodeTest {
 
-    @Param({"12.12.2000", "1234567890"})
-    private String user_date;
-
-    @Param({"false"})
-    private boolean isException;
-
-    @Param({"8"})
-    private byte isException_b;
-
-    private String[] patternsDateFormat;
-
-    private SimpleDateFormat simpleDateFormat;
-
+    private int[] patternsDateFormat;
     @Setup
     public void prepare() {
-        patternsDateFormat = new String[] {"dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy"};
+        patternsDateFormat = new int[1000];
+        for (int i = 0; i < patternsDateFormat.length; i++) {
+            patternsDateFormat[i] = i + 1;
+        }
     }
 
     @Benchmark
@@ -36,22 +27,12 @@ public class BenchmarkCodeTest {
     @OutputTimeUnit(TimeUnit.NANOSECONDS)
     @Timeout(time = 10, timeUnit = TimeUnit.MILLISECONDS)
     public String byteShift() {
-        if (user_date.length() != 10) {
-            System.out.println("Incorrect date");
-            return "Incorrect date";
-        }
-
+        int result_mul = 1;
         for (int i = 0; i < patternsDateFormat.length; i++) {
-            simpleDateFormat = new SimpleDateFormat(patternsDateFormat[i]);
-            try {
-                Date date = simpleDateFormat.parse(user_date);
-                break;
-            } catch (ParseException ex) {
-                isException_b <<= 1;
-            }
+            result_mul *= patternsDateFormat[i];
         }
 
-        return ((isException_b ^ 0b1000) == 0) ? "Incorrect date" : null;
+        return String.valueOf(result_mul);
     }
 
     @Benchmark
@@ -62,22 +43,11 @@ public class BenchmarkCodeTest {
     @OutputTimeUnit(TimeUnit.NANOSECONDS)
     @Timeout(time = 10, timeUnit = TimeUnit.MILLISECONDS)
     public String booleanState() {
-        if (user_date.length() != 10) {
-            System.out.println("Incorrect date");
-            return "Incorrect date";
-        }
-
+        int result_mul = 1;
         for (var e : patternsDateFormat) {
-            simpleDateFormat = new SimpleDateFormat(e);
-            try {
-                Date date = simpleDateFormat.parse(user_date);
-                isException = false;
-                break;
-            } catch (ParseException ex) {
-                isException = true;
-            }
+            result_mul *= e;
         }
 
-        return (isException) ? "Incorrect date" : null;
+        return String.valueOf(result_mul);
     }
 }

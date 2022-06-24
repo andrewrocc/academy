@@ -18,9 +18,42 @@ public class Main {
 //        task_1();
 //        task_2();
 //        task_3();
-        task_4();
-
+//        task_4();
+        task_5();
         scan.close();
+
+    }
+
+    private static void task_5() {
+        // Examples:
+        //  +111 (202) 555-0125, +111 202 555 0125, +1112025550125, +111 202-555-0125, +211 (202) 555-0125, (202) 555-0125, 202-555-0125, +375 (29) 623 15 64, +375 29 623-15-64, +375296231564, +375 29 623 15 64, 623 15 64, 6231564
+        System.out.print("Enter one or more numbers(separated by commas ', '): ");
+        String[] phone_number = scan.nextLine().split(", ");
+        AmericanPhoneValidator phoneValidator = new AmericanPhoneValidator();
+        System.out.println("American phone validator:");
+        for (var e : phone_number) {
+            System.out.println((e.length() < 17 ? e + "\t\t\t" : e + "\t\t") + (phoneValidator.validate(e) ? "valid" : "not valid"));
+        }
+
+        System.out.println("----------------------------------------");
+
+        System.out.println("Belarus phone validator:");
+        BelarusPhoneValidator phoneValidator_BLR = new BelarusPhoneValidator();
+        for (var e : phone_number) {
+            System.out.println((e.length() < 17 ? e + "\t\t\t" : e + "\t\t") + (phoneValidator_BLR.validate(e) ? "valid" : "not valid"));
+        }
+
+        System.out.println("----------------------------------------");
+
+        // Examples:
+        // username@domain.com, user.name@lol.com, asldkj34@gmail.com, daink_2055@mail.ru, 123411235@qweqwr, 123123123@, n1@gmail.blr, google@.com, q123a_q234e.@mail.ru
+        System.out.print("Enter emails (separated by commas ', '): ");
+        String[] emails = scan.nextLine().split(", ");
+        EmailValidator e_validator = new EmailValidator();
+        System.out.println("Email validator:");
+        for (var e :emails) {
+            System.out.println((e.length() < 15 ? e + "\t\t\t" : e + "\t\t") + (e_validator.validate(e) ? "valid" : "not valid"));
+        }
     }
 
     private static void task_4(){

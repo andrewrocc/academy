@@ -10,7 +10,6 @@ class Deal {
     private String customer;
     private Date dateTimeDeal;
     private String commentDeal;
-
     private double totalPrice;
     //endregion
 

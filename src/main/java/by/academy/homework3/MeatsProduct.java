@@ -22,6 +22,7 @@ public class MeatsProduct extends Product{
         this.costDiscount = costDiscount;
     }
     //endregion
+
     public MeatsProduct(String productName, double cost, short productCount, int discount) {
         super(productName, cost, productCount);
         this.discount = discount;
