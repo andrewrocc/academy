@@ -1,6 +1,10 @@
 package by.academy.homework3;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 class Deal {
     //region fields of class
@@ -11,6 +15,8 @@ class Deal {
     private Date dateTimeDeal;
     private String commentDeal;
     private double totalPrice;
+
+    private Date deadline;
     //endregion
 
     public Deal(String productName, double productPrice, short productCount, String customer,
@@ -22,6 +28,10 @@ class Deal {
         this.dateTimeDeal = new Date();
         this.commentDeal = commentDeal;
         totalPrice = productPrice * productCount;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateTimeDeal);
+        cal.add(Calendar.DATE, 10);
+        deadline = cal.getTime();
     }
 
     @Override
@@ -31,7 +41,8 @@ class Deal {
                             "customer = '%s', " +
                             "date time deal = '%tc', " +
                             "comment deal = '%s', " +
-                            "total price = '%4.2f' }",
-                            productName, productCount, customer, dateTimeDeal, commentDeal, totalPrice);
+                            "total price = '%.2f' " +
+                            "deadline = '%tc' " + "}",
+                            productName, productCount, customer, dateTimeDeal, commentDeal, totalPrice, deadline);
     }
 }

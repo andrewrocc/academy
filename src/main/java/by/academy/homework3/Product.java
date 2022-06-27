@@ -14,9 +14,11 @@ class Product {
         this.productCount = productCount;
     }
 
+    public Product() { }
+
     @Override
     public String toString() {
-        return String.format("Product { name = '%s', cost = '%6.2f', count = '%d' }",
+        return String.format("Product { name = '%s', cost = '%.2f', count = '%d' }",
                             productName, cost, productCount);
     }
 

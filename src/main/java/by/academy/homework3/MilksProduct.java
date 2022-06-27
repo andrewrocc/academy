@@ -30,7 +30,7 @@ public class MilksProduct extends Product {
 
     @Override
     public String toString() {
-        return String.format("MilksProduct { name = '%s', cost = '%6.2f', count = '%d', discount = '%d%%', costDiscount = '%6.2f' }",
+        return String.format("MilksProduct { name = '%s', cost = '%6.2f', count = '%d', discount = '%d%%', costDiscount = '%.2f' }",
                             getProductName(), getCost(), getProductCount(), discount, costDiscount);
     }
 }

@@ -1,5 +1,7 @@
 package by.academy.homework3;
 
+import com.sun.security.jgss.GSSUtil;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -19,9 +21,95 @@ public class Main {
 //        task_2();
 //        task_3();
 //        task_4();
-        task_5();
+//        task_5();
+//        task_6();
+//        task_7();
+//        task_8();
+        task_9();
         scan.close();
 
+    }
+
+    private static void task_9() {
+        task_8();
+    }
+
+    private static void task_8() {
+        System.out.print("Enter user name: ");
+        String userName = scan.nextLine();
+        System.out.print("Enter user phone: ");
+        String phone = scan.nextLine();
+        System.out.print("Enter user email: ");
+        String email = scan.nextLine();
+        String[] bDate = task_3();
+
+        if (Boolean.valueOf(bDate[1]).equals(true)) {
+            User user = new User(userName, bDate[0], phone, email);
+            if (user.getPhone() != null || user.getEmail() != null) {
+                System.out.println(user);
+            }
+        }
+        else {
+            System.out.println("Incorrect date.");
+        }
+    }
+
+    private static void task_7() {
+        task_1();
+    }
+
+    private static void task_6() {
+        Product product = new Product();
+        ListProducts listProducts = new ListProducts();
+        double total_cost;
+        char response = '\u0000';
+
+        while (response != 'n') {
+            System.out.print("Enter product name: ");
+            String productName = scan.nextLine();
+            System.out.print("Enter product cost: ");
+            double cost = scan.nextDouble();
+            System.out.print("Enter product count: ");
+            short count = scan.nextShort();
+            product = new Product(productName, cost, count);
+            listProducts.add_deal(product);
+
+            scan.nextLine();
+            System.out.print("Do you want to add new product? (y/n): ");
+            response = scan.nextLine().toLowerCase(Locale.ROOT).charAt(0);
+        }
+
+        total_cost = print_deals(listProducts);
+
+        char delete_element = '\u0000';
+        System.out.print("Do you want to remove product from list?(y/n) ");
+        delete_element = scan.nextLine().toLowerCase().charAt(0);
+        if (delete_element == 'y') {
+            String delete_product_name = "";
+            System.out.print("Enter the name of product to delete: ");
+            delete_product_name = scan.nextLine();
+
+            for (int i = 0; i < listProducts.size_deal(); i++) {
+                if (listProducts.get_i(i).getProductName().equalsIgnoreCase(delete_product_name)) {
+                    listProducts.remove_deal(listProducts.get_i(i));
+                }
+                else {
+                    System.out.println("Error. Incorrect product name.");
+                }
+            }
+        }
+
+        total_cost = print_deals(listProducts);
+    }
+
+    private static double print_deals(ListProducts listProducts) {
+        double total_cost = 0.0d;
+        for (int i = 0; i < listProducts.size_deal(); i++) {
+            System.out.println(listProducts.get_i(i));
+            total_cost += listProducts.get_i(i).getCost() * listProducts.get_i(i).getProductCount();
+        }
+        System.out.println("total cost = " + total_cost + "\n--------------------------------");
+        return total_cost;
     }
 
     private static void task_5() {
@@ -88,12 +176,13 @@ public class Main {
         System.out.println("Year: " + simpleFormat.format(date));
     }
 
-    private static void task_3() {
+    private static String[] task_3() {
         System.out.print("Enter the date format(dd/mm/yyyy) or (dd-mm-yyyy): ");
         String date = scan.nextLine();
         boolean res_opt1 = date.matches(DATE_PATTERN);
         boolean res_opt2 = date.matches(DATE_PATTERN_V1);
         System.out.println(res_opt1 || res_opt2);
+        return new String[] { date, String.valueOf(res_opt1 || res_opt2)};
     }
 
     private static void task_2() {

@@ -31,7 +31,7 @@ public class MeatsProduct extends Product{
 
     @Override
     public String toString() {
-        return String.format("MeatsProduct { name = '%s', cost = '%6.2f', count = '%d', discount = '%d%%', costDiscount = '%6.2f' }",
+        return String.format("MeatsProduct { name = '%s', cost = '%6.2f', count = '%d', discount = '%d%%', costDiscount = '%.2f' }",
                             getProductName(), getCost(), getProductCount(), discount, costDiscount);
     }
 }

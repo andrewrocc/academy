@@ -1,5 +1,8 @@
 package by.academy.homework3;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DrinksProduct extends Product {
 
     private int discount;
@@ -31,7 +34,7 @@ public class DrinksProduct extends Product {
 
     @Override
     public String toString() {
-        return String.format("DrinksProduct { name = '%s', cost = '%6.2f', count = '%d', discount = '%d%%', costDiscount = '%6.2f'}",
+        return String.format("DrinksProduct { name = '%s', cost = '%6.2f', count = '%d', discount = '%d%%', costDiscount = '%.2f'}",
                 getProductName(), getCost(), getProductCount(), discount, costDiscount);
     }
 }
