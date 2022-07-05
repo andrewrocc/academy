@@ -83,7 +83,7 @@ public class Deal {
         // some math and beautiful code, that not final version
         double total_price = 0.0;
         for (var e : listProduct) {
-            total_price += (e.getProductPrice() * e.getProductQuantity() + e.getProductTax());
+            total_price += (e.getProductPrice() * e.getProductQuantity() * (1 + e.getProductTax()));      // if tax = 3% -> price * 1.03
         }
         return total_price;
     }

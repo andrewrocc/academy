@@ -80,7 +80,7 @@ public class Product {
 
     private double discount() {
         // some math and beautiful code, that not final version
-        return ((productPrice * productQuantity) + productTax) * 0.95;
+        return ((productPrice * productQuantity) + productTax) * 0.95;          // if discount = 5% -> price * 0.95
     }
 
     private double calculatePrice() {
