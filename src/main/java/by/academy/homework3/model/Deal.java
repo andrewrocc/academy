@@ -12,7 +12,7 @@ public class Deal {
 
     private Product[] listProduct;
 
-    LocalDateTime dealTime;
+    private LocalDateTime dealTime;
     //endregion
 
     //region prop
