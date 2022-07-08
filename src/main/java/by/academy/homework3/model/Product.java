@@ -5,13 +5,15 @@ import java.util.Objects;
 public class Product {
 
     //region fields
-    private String productName;
+    protected String productName;
 
-    private double productPrice;
+    protected double productPrice;
 
-    private short productQuantity;
+    protected short productQuantity;
 
-    private double productTax;
+    protected double productTax;
+
+    public Product() { }
     //endregion
 
     //region prop
@@ -58,7 +60,7 @@ public class Product {
     //region Overrides methods
     @Override
     public String toString() {
-        return String.format("Product { name = '%s', price = '%.2f', quantity = '%d', tax = '%f' }",
+        return String.format("Product { name = '%s', price = '%.2f', quantity = '%d', tax = '%.2f' }\n",
                             productName, productPrice, productQuantity, productTax);
     }
 
@@ -78,13 +80,11 @@ public class Product {
     }
     //endregion
 
-    private double discount() {
-        // some math and beautiful code, that not final version
-        return ((productPrice * productQuantity) + productTax) * 0.95;          // if discount = 5% -> price * 0.95
+    public double discount() {
+        return 1.0;          // if discount = 5% -> price * 0.95
     }
 
-    private double calculatePrice() {
-        // some math and beautiful code, idk wat this method is for?
-        return 1.0;
+    public double calculatePrice() {
+        return productPrice * productQuantity * productTax;
     }
 }
