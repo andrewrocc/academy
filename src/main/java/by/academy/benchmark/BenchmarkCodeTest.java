@@ -1,7 +1,6 @@
 package by.academy.benchmark;
 
 import by.academy.homework3.services.DynamicIntArray;
-import by.academy.experiment.Quicksort;
 import org.openjdk.jmh.annotations.*;
 
 import java.util.*;
@@ -78,8 +77,6 @@ public class BenchmarkCodeTest {
     @OutputTimeUnit(TimeUnit.NANOSECONDS)
     @Timeout(time = 10, timeUnit = TimeUnit.MILLISECONDS)
     public String dynamicIntArray() {
-        Quicksort qsorter = new Quicksort();
-        qsorter.sort(dynamic_array.getStorage());
 
         return String.valueOf(array[9]);
     }

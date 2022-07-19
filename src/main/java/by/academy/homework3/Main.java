@@ -1,25 +1,20 @@
 package by.academy.homework3;
 
 import by.academy.homework3.model.*;
-import by.academy.homework3.services.AmericanPhoneValidator;
-import by.academy.homework3.services.BelarusPhoneValidator;
-import by.academy.homework3.services.EmailValidator;
-import by.academy.homework3.services.ListProduct;
+import by.academy.homework3.services.*;
 import by.academy.homework3.services.Serializer.FileIOServise;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Main {
 
     public static final Scanner scan = new Scanner(System.in);
-
-    public static final String DATE_PATTERN = "(0[1-9]|1\\d|2\\d|3[0-1]|[1-9])/(0[1-9]|1[0-2]|[1-9])/(\\d{4})";
-
-    public static final String DATE_PATTERN_V1 = "(0[1-9]|1\\d|2\\d|3[0-1]|[1-9])-(0[1-9]|1[0-2]|[1-9])-(\\d{4})";
 
     private static final String fileName = "data.json";
 
@@ -28,21 +23,93 @@ public class Main {
     private static final String currentDirectory = currentRelativePath.toAbsolutePath().toString().concat("\\" + fileName);
 
     public static void main(String[] args) {
-//        task_1();
-//        task_2();
-//        task_3();
-//        task_4();
-//        task_5();
-        task_6();
-//        task_7();
-//        task_8();
-//        task_9();
+
+        User seller = null;
+        User buyer = null;
+        do {
+            seller = sellerInfo();
+            if (seller == null) {
+                System.out.println("The seller information needs to be corrected!!!\n");
+                continue;
+            }
+
+            buyer = buyerInfo();
+            if (buyer == null) {
+                System.out.println("The buyer information needs to be corrected");
+            }
+        } while (seller == null && buyer == null);
+
+        char isExit = 'n';
+        ListProduct listProduct;
+        Deal deal;
+        do {
+            int pointMenu = mainMenu();
+            listProduct = new ListProduct();
+
+            switch (pointMenu) {
+                case 1: shopMenu();
+                case 2: shopMenu();
+                case 3: shopMenu();
+                case 4: break;
+                default:
+            }
+
+            System.out.print("Do you want to get out?(y/n): ");
+            isExit = scan.nextLine().charAt(0);
+        } while(isExit == 'n');
+
+//        User a = User.isValidDataFormat("an", 123.2, LocalDate.parse("08-01-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")), "wergf@gmai.com", "+375334560099");
+//        System.out.println(a);
 
         scan.close();
     }
 
-    private static void task_9() {
-        task_8();
+    public static int mainMenu() {
+        System.out.println("1. Shop menu\n2. Buy\n3. Basket\n4. Exit");
+        return scan.nextInt();
+    }
+
+    public static int shopMenu() {
+        System.out.println();
+        return 1;
+    }
+
+    public static User sellerInfo() {
+        String userName, userEmail, userPhone;
+        double userMoney;
+        LocalDate dateOfBirth;
+        System.out.print("Enter the seller name: ");
+        userName = scan.nextLine();
+        System.out.print("Enter the seller email: ");
+        userEmail = scan.nextLine();
+        System.out.print("Enter the seller phone(+357...): ");
+        userPhone = scan.nextLine();
+        System.out.print("Enter the seller money: ");
+        userMoney = scan.nextDouble();
+        System.out.print("Enter the seller date of birth: ");
+        String dateString = scan.nextLine();
+        dateString = scan.nextLine();
+        dateOfBirth = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        return User.isValidDataFormat(userName, userMoney, dateOfBirth, userEmail, userPhone);
+    }
+
+    public static User buyerInfo() {
+        String userName, userEmail, userPhone;
+        double userMoney;
+        LocalDate dateOfBirth;
+        System.out.print("Enter the buyer name: ");
+        userName = scan.nextLine();
+        System.out.print("Enter the buyer email: ");
+        userEmail = scan.nextLine();
+        System.out.print("Enter the buyer phone(+357...): ");
+        userPhone = scan.nextLine();
+        System.out.print("Enter the buyer money: ");
+        userMoney = scan.nextDouble();
+        System.out.print("Enter the buyer date of birth: ");
+        String dateString = scan.nextLine();
+        dateString = scan.nextLine();
+        dateOfBirth = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        return User.isValidDataFormat(userName, userMoney, dateOfBirth, userEmail, userPhone);
     }
 
     private static void task_8() {
@@ -63,10 +130,6 @@ public class Main {
 //        else {
 //            System.out.println("Incorrect date.");
 //        }
-    }
-
-    private static void task_7() {
-        task_1();
     }
 
     private static void task_6() {
@@ -161,14 +224,14 @@ public class Main {
         System.out.println("Year: " + simpleFormat.format(date));
     }
 
-    private static String[] task_3() {
-        System.out.print("Enter the date format(dd/mm/yyyy) or (dd-mm-yyyy): ");
-        String date = scan.nextLine();
-        boolean res_opt1 = date.matches(DATE_PATTERN);
-        boolean res_opt2 = date.matches(DATE_PATTERN_V1);
-        System.out.println(res_opt1 || res_opt2);
-        return new String[] { date, String.valueOf(res_opt1 || res_opt2)};
-    }
+//    private static String[] task_3() {
+//        System.out.print("Enter the date format(dd/mm/yyyy) or (dd-mm-yyyy): ");
+//        String date = scan.nextLine();
+//        boolean res_opt1 = date.matches(DATE_PATTERN);
+//        boolean res_opt2 = date.matches(DATE_PATTERN_V1);
+//        System.out.println(res_opt1 || res_opt2);
+//        return new String[] { date, String.valueOf(res_opt1 || res_opt2)};
+//    }
 
     private static void task_2() {
 //        MilksProduct milk = new MilksProduct("sour cream", 58.0, (short) 2, 5);

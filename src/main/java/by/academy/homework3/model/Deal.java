@@ -13,6 +13,8 @@ public class Deal {
     private Product[] listProduct;
 
     private LocalDateTime dealTime;
+
+    private LocalDateTime deadLine;
     //endregion
 
     //region prop
@@ -47,6 +49,15 @@ public class Deal {
     public void setDealTime(LocalDateTime dealTime) {
         this.dealTime = dealTime;
     }
+
+    public LocalDateTime getDeadLine() {
+        return deadLine;
+    }
+
+    public void setDeadLine(LocalDateTime deadLine) {
+        this.deadLine = deadLine;
+    }
+
     //endregion
 
     public Deal(User seller, User buyer, Product[] listProduct) {
@@ -91,5 +102,6 @@ public class Deal {
     public void deal() {
         // some math and beautiful code
         dealTime = LocalDateTime.now();
+        deadLine = deadLine.plusDays(10);
     }
 }

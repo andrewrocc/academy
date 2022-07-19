@@ -67,7 +67,7 @@ public class ListProduct {
         if(index < 0 || index > size)
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
 
-        if (capacity() < size)
+        if (capacity() <= size)
             ensureCapacity(size + 1);
         int move_count = size - index;              // number of elements to shift
         if(move_count > 0)
@@ -86,12 +86,25 @@ public class ListProduct {
         size--;
     }
 
+    public boolean remove(Object o) {
+        int i = 0;
+        if (o == null) {
+            return false;
+        } else {
+            for (; i < size; i++)
+                if (o.equals(storage[i]))
+                    break;
+        }
+        removeAt(i);
+        return true;
+    }
+
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();
-        output.append("[ ");
+        output.append("[ \n");
         for (int idx = 0; idx < size; idx++)
-            output.append(get(idx)).append(" ");
+            output.append(get(idx)).append(" \n");
 
         output.append("]");
         return output.toString();
