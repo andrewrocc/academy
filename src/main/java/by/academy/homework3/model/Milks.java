@@ -1,8 +1,13 @@
 package by.academy.homework3.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Milks extends Product {
+public class Milks extends Product implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 001010L;
 
     //region fields
     private boolean isFresh;
@@ -43,8 +48,8 @@ public class Milks extends Product {
     //region javaBean(override)
     @Override
     public String toString() {
-        return String.format("MilksProduct { name = '%s', cost = '%6.2f', count = '%d', fresh = '%s', weight = '%.2f' }",
-                            getProductName(), getProductPrice(), getProductQuantity(), isFresh, weight);
+        return String.format("MilksProduct { name = '%s', cost = '%.2f', count = '%d', fresh = '%s', weight = '%.2f', tax = '%.2f' }",
+                            getProductName(), getProductPrice(), getProductQuantity(), isFresh, weight, getProductTax());
     }
 
     @Override

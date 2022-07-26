@@ -4,7 +4,9 @@ import by.academy.homework3.services.BelarusPhoneValidator;
 import by.academy.homework3.services.EmailValidator;
 import by.academy.homework3.services.ValidateDateFormat;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class User {
@@ -84,11 +86,48 @@ public class User {
      * @param userEmail checkable value
      * @param userPhone checkable value
     * */
-    public static User isValidDataFormat(String userName, double userMoney, LocalDate dateOfBirth, String userEmail, String userPhone) {
+    public static User isValidDataFormat(String userName, double userMoney, String dateOfBirth, String userEmail, String userPhone) {       //LocalDate
         var isValidUserDate = new ValidateDateFormat().isValidateDate(dateOfBirth);
         var isValidUserEmail = new EmailValidator().validate(userEmail);
         var isValidUserPhone = new BelarusPhoneValidator().validate(userPhone);
-        return (isValidUserDate & isValidUserEmail & isValidUserPhone) ? new User(userName, userMoney, dateOfBirth, userEmail, userPhone) : null;
+        LocalDate dateParse = null;
+        if (isValidUserDate) {
+            try {
+                dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            } catch (DateTimeException ex) { }
+
+            if (dateParse == null) {
+                try {
+                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd-M-yyyy"));
+                } catch (DateTimeException ex) {
+                }
+            }
+
+            if (dateParse == null) {
+            try {
+                dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("d-MM-yyyy"));
+            } catch (DateTimeException ex) { } }
+
+
+            if (dateParse == null) {
+                try {
+                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                } catch (DateTimeException ex) { }
+            }
+
+            if (dateParse == null) {
+                try {
+                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd/M/yyyy"));
+                } catch (DateTimeException ex) { }
+            }
+
+            if (dateParse == null) {
+                try {
+                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("d/MM/yyyy"));
+                } catch (DateTimeException ex) { }
+            }
+        }
+        return (isValidUserDate & isValidUserEmail & isValidUserPhone) ? new User(userName, userMoney, dateParse, userEmail, userPhone) : null;
     }
 
     //region Overrides

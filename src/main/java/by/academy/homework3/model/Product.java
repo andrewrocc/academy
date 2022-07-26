@@ -1,8 +1,13 @@
 package by.academy.homework3.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Product {
+public class Product implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 001010L;
 
     //region fields
     protected String productName;

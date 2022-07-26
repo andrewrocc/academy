@@ -2,18 +2,23 @@ package by.academy.homework3.services;
 
 import by.academy.homework3.model.Product;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class ListProduct {
+public class ListProduct implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 001010L;
 
     //region fields
     private Product[] storage;
 
-    private int size;
+    private transient int size;
 
-    private final int INITIAL_CAPACITY = 10;
+    private transient final int INITIAL_CAPACITY = 10;
     //endregion1
 
     //region constr
@@ -101,13 +106,9 @@ public class ListProduct {
 
     @Override
     public String toString() {
-        StringBuilder output = new StringBuilder();
-        output.append("[ \n");
-        for (int idx = 0; idx < size; idx++)
-            output.append(get(idx)).append(" \n");
-
-        output.append("]");
-        return output.toString();
+        return "ListProduct{" +
+                "storage = " + Arrays.deepToString(storage).replace("},", "}\n") +
+                '}';
     }
 
     public boolean equals(List<Product> list)

@@ -3,7 +3,9 @@ package by.academy.homework3;
 import by.academy.homework3.model.*;
 import by.academy.homework3.services.*;
 import by.academy.homework3.services.Serializer.FileIOServise;
+import by.academy.homework3.services.Serializer.InfoFileParser;
 
+import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -14,102 +16,161 @@ import java.util.*;
 
 public class Main {
 
+    //region static fields
     public static final Scanner scan = new Scanner(System.in);
 
-    private static final String fileName = "data.json";
+    private static final String fileName = "data.bin";
 
     private static final Path currentRelativePath = Paths.get("");
 
     private static final String currentDirectory = currentRelativePath.toAbsolutePath().toString().concat("\\" + fileName);
 
+    private static final String MILKS_PRODUCT = "Milks";
+
+    private static final String DRINKS_PRODUCT = "Drinks";
+
+    private static final String MEATS_PRODUCT = "Meats";
+
+    private static FileIOServise<ListProduct> ioServise = new FileIOServise(currentDirectory);
+
+    private static ListProduct buyerBasket = new ListProduct();
+
+    static List<String> milksProduct;
+
+    static List<String> drinksProduct;
+
+    static List<String> meatsProduct;
+
+    static List<String> allProducts;
+
+    static ListProduct binInfo;
+
+    static {
+        binInfo = (ListProduct) ioServise.loadData();
+        milksProduct = new InfoFileParser().getArrayProduct(binInfo.toString(), MILKS_PRODUCT);
+        drinksProduct = new InfoFileParser().getArrayProduct(binInfo.toString(), DRINKS_PRODUCT);
+        meatsProduct = new InfoFileParser().getArrayProduct(binInfo.toString(), MEATS_PRODUCT);
+        allProducts = new ArrayList<>();
+        allProducts.addAll(milksProduct);         // milksProduct + drinksProduct + meatsProduct;
+        allProducts.addAll(meatsProduct);
+        allProducts.addAll(drinksProduct);
+    }
+    //endregion
+
     public static void main(String[] args) {
 
-        User seller = null;
+        User seller;
         User buyer = null;
         do {
-            seller = sellerInfo();
+            seller = setUserInfo("seller");
             if (seller == null) {
                 System.out.println("The seller information needs to be corrected!!!\n");
                 continue;
             }
 
-            buyer = buyerInfo();
+            buyer = setUserInfo("buyer");
             if (buyer == null) {
                 System.out.println("The buyer information needs to be corrected");
             }
-        } while (seller == null && buyer == null);
+        } while ((seller == null) && (buyer == null));
 
-        char isExit = 'n';
-        ListProduct listProduct;
-        Deal deal;
+
+        ListProduct listProduct = new ListProduct();
+        Deal deal = new Deal(seller, buyer, listProduct);
         do {
             int pointMenu = mainMenu();
-            listProduct = new ListProduct();
 
             switch (pointMenu) {
-                case 1: shopMenu();
-                case 2: shopMenu();
-                case 3: shopMenu();
-                case 4: break;
+                case 1: shopCatalog(); break;
+                case 2: shopBasket(""); break;
+                case 3: exitMoment(deal); scan.close(); return;
                 default:
+                    System.out.println("You did not select any point.");
             }
 
-            System.out.print("Do you want to get out?(y/n): ");
-            isExit = scan.nextLine().charAt(0);
-        } while(isExit == 'n');
+        } while(true);
 
 //        User a = User.isValidDataFormat("an", 123.2, LocalDate.parse("08-01-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")), "wergf@gmai.com", "+375334560099");
 //        System.out.println(a);
-
-        scan.close();
     }
 
     public static int mainMenu() {
-        System.out.println("1. Shop menu\n2. Buy\n3. Basket\n4. Exit");
-        return scan.nextInt();
+        int response;
+        do {
+            System.out.println("1. Shop catalog\n2. Basket\n3. Exit");
+            response = scan.nextInt();
+        } while (response < 0 && response > 4);
+        return response;
     }
 
-    public static int shopMenu() {
-        System.out.println();
-        return 1;
+    public static void shopCatalog() {
+        int response;
+        do {
+            System.out.println("1. Milks\n2. Meats\n3. Drinks\n4. All products\n5.Back to main menu");
+            response = scan.nextInt();
+            switch (response) {
+                case 1: productCatalog(MILKS_PRODUCT); break;
+                case 2: productCatalog(MEATS_PRODUCT); break;
+                case 3: productCatalog(DRINKS_PRODUCT); return;
+                case 4: productCatalog(""); return;
+                case 5: return;
+                default:
+                    System.out.println("You did not select any point.");
+            }
+
+        } while(true);
     }
 
-    public static User sellerInfo() {
+    public static int productCatalog(String productType) {
+        int response;
+        List<String> selectedProduct = productType.equals(MILKS_PRODUCT) ? milksProduct :
+        productType.equals(MEATS_PRODUCT) ? meatsProduct :
+        productType.equals(DRINKS_PRODUCT) ? drinksProduct : allProducts;
+        do {
+            for (int i = 0; i < selectedProduct.size(); i++) {
+                System.out.println(i + 1 + " - " + selectedProduct.get(i));         //.replace("}, ", "}, \n");
+            }
+            System.out.println("\n------------------------\n1. Buy position\n2. Go to basket\n3. Back to main menu");
+            response = scan.nextInt();
+            if (response == 1) {
+                System.out.print("Enter the number position: ");
+                int position = scan.nextInt();
+                System.out.print("Enter the quantity: ");
+                short quantity = scan.nextShort();
+                var e = binInfo.get(position);
+                buyerBasket.add(e);
+            }
+        } while(response > 0 && response < 4);
+        return response;
+    }
+
+    private static void shopBasket(String s) {  }
+
+    public static void exitMoment(Deal deal) {
+        if (deal.getListProduct().getStorage()[0] == null) {
+            System.out.println("Your check is empty.");
+        } else {
+            System.out.println(deal);
+        }
+    }
+
+    public static User setUserInfo(String userType) {
         String userName, userEmail, userPhone;
         double userMoney;
         LocalDate dateOfBirth;
-        System.out.print("Enter the seller name: ");
+        System.out.print("Enter the " + userType + " name: ");
         userName = scan.nextLine();
-        System.out.print("Enter the seller email: ");
+        System.out.print("Enter the " + userType + " email: ");
         userEmail = scan.nextLine();
-        System.out.print("Enter the seller phone(+357...): ");
+        System.out.print("Enter the " + userType + " phone(+357...): ");
         userPhone = scan.nextLine();
-        System.out.print("Enter the seller money: ");
+        System.out.print("Enter the " + userType + " money: ");
         userMoney = scan.nextDouble();
-        System.out.print("Enter the seller date of birth: ");
+        System.out.print("Enter the " + userType + " date of birth(d-m-y): ");
         String dateString = scan.nextLine();
         dateString = scan.nextLine();
-        dateOfBirth = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        return User.isValidDataFormat(userName, userMoney, dateOfBirth, userEmail, userPhone);
-    }
-
-    public static User buyerInfo() {
-        String userName, userEmail, userPhone;
-        double userMoney;
-        LocalDate dateOfBirth;
-        System.out.print("Enter the buyer name: ");
-        userName = scan.nextLine();
-        System.out.print("Enter the buyer email: ");
-        userEmail = scan.nextLine();
-        System.out.print("Enter the buyer phone(+357...): ");
-        userPhone = scan.nextLine();
-        System.out.print("Enter the buyer money: ");
-        userMoney = scan.nextDouble();
-        System.out.print("Enter the buyer date of birth: ");
-        String dateString = scan.nextLine();
-        dateString = scan.nextLine();
-        dateOfBirth = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        return User.isValidDataFormat(userName, userMoney, dateOfBirth, userEmail, userPhone);
+//        dateOfBirth = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        return User.isValidDataFormat(userName, userMoney, dateString, userEmail, userPhone);
     }
 
     private static void task_8() {
@@ -133,31 +194,25 @@ public class Main {
     }
 
     private static void task_6() {
-        FileIOServise ioServise = new FileIOServise(currentDirectory);
-
-        // serialise data (save data)
-        ListProduct listToFile = new ListProduct();
-        listToFile.add(new Milks("Milk", 15.5, (short) 2, 0.3, true, 5.1));
-        listToFile.add(new Meats("Chicken", 26.99, (short) 1, 0.3, true, 3.23));
-        listToFile.add(new Milks("Cheese", 45.0, (short) 1, 0.3, true, 0.561));
-        listToFile.add(new Milks("Ice-cream", 9.99, (short) 4, 0.3, true, 6.98));
-        listToFile.add(new Meats("Pizza", 31.95, (short) 3, 0.3, true, 3.56));
-        listToFile.add(new Drinks("Coke", 7.0, (short) 2, 0.3, true, 2.1));
-        ioServise.saveData(listToFile);
-
-        // deserialize data(load data)
-        Object list = ioServise.loadData();
-        System.out.println(list.toString().replace("},", "}\n"));
-
-        // Menu
-//        char response = 'y';
-//        do {
+//        FileIOServise ioServise = new FileIOServise(currentDirectory);
 //
+//        // serialise data (save data)
+//        ListProduct listToFile = new ListProduct();
+//        listToFile.add(new Milks("Milk",15.5, (short) 1, 0.3, true, 5.1));
+//        listToFile.add(new Meats("Chicken", 26.99, (short) 1, 0.3, true, 3.23));
+//        listToFile.add(new Milks("Cheese", 45.0, (short) 1, 0.3, true, 0.561));
+//        listToFile.add(new Milks("Ice-cream", 9.99, (short) 1, 0.3, true, 6.98));
+//        listToFile.add(new Meats("Pizza",  31.95, (short) 1, 0.3, true, 3.56));
+//        listToFile.add(new Drinks("Coke", 7.0, (short) 1, 0.3, true, 6.1));
+//        listToFile.add(new Drinks("Coffee", 7.0, (short) 1, 0.3, true, 2.0));
+//        listToFile.add(new Drinks("Tea", 7.0, (short) 1, 0.3, true, 7.8));
+//        listToFile.add(new Drinks("Water", 7.0, (short) 1, 0.3, true, 3.1));
+//        listToFile.add(new Milks("Sour-cream", 4.0, (short) 1, 0.3, true, 6.1));
+//        ioServise.saveData(listToFile);
 //
-//
-//            System.out.println("Do you want to end it?(y/n): ");
-//            response = scan.nextLine().charAt(0);
-//        } while (response == 'y');
+//        // deserialize data(load data)
+//        ListProduct list = (ListProduct) ioServise.loadData();
+//        System.out.println(list.toString());
     }
 
     private static void task_5() {
@@ -233,48 +288,4 @@ public class Main {
 //        return new String[] { date, String.valueOf(res_opt1 || res_opt2)};
 //    }
 
-    private static void task_2() {
-//        MilksProduct milk = new MilksProduct("sour cream", 58.0, (short) 2, 5);
-//        System.out.println(milk);
-//        MeatsProduct meat = new MeatsProduct("chicken", 120.45, (short) 2, 8);
-//        System.out.println(meat);
-//        DrinksProduct coca = new DrinksProduct("coca-cola", 46.99, (short) 3, 6);
-//        System.out.println(coca);
-    }
-
-    public static void task_1() {
-//        boolean isEnough = false;
-//        List<Deal> list_deal = new ArrayList<>();
-//        while (!isEnough) {
-//            System.out.print("Need to add a new deal? (y/n): ");
-//            char request = scan.next().charAt(0);
-//            if (request == 'n') {
-//                isEnough = true;
-//                break;
-//            }
-//            else {
-//                scan.nextLine();
-//                System.out.print("product name: ");
-//                String productName = scan.nextLine();
-//                System.out.print("product price: ");
-//                double productPrice = scan.nextDouble();
-//                System.out.print("product count: ");
-//                short productCount = scan.nextShort();
-//                if (productCount <= 0){
-//                    System.out.println("The number cannot be equal to or less than 0.");
-//                    return;
-//                }
-//                scan.nextLine();
-//                System.out.print("customer name: ");
-//                String customer = scan.nextLine();
-//                System.out.print("comment for deal: ");
-//                String commentDeal = scan.nextLine();
-//                list_deal.add(new Deal(productName, productPrice, productCount, customer, commentDeal));
-//            }
-//        }
-//
-//        for (int i = 0; i < list_deal.size(); i++) {
-//            System.out.print(list_deal.get(i).toString());
-//        }
-    }
 }
