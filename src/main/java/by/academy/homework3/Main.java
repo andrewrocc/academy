@@ -3,15 +3,12 @@ package by.academy.homework3;
 import by.academy.homework3.model.*;
 import by.academy.homework3.services.*;
 import by.academy.homework3.services.Serializer.FileIOServise;
-import by.academy.homework3.services.Serializer.InfoFileParser;
 
-import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Main {
@@ -35,54 +32,51 @@ public class Main {
 
     private static ListProduct buyerBasket = new ListProduct();
 
-    static List<String> milksProduct;
-
-    static List<String> drinksProduct;
-
-    static List<String> meatsProduct;
-
-    static List<String> allProducts;
-
     static ListProduct binInfo;
+
+    static ListProduct milksProduct;
+
+    static ListProduct meatsProduct;
+
+    static ListProduct drinksProduct;
 
     static {
         binInfo = (ListProduct) ioServise.loadData();
-        milksProduct = new InfoFileParser().getArrayProduct(binInfo.toString(), MILKS_PRODUCT);
-        drinksProduct = new InfoFileParser().getArrayProduct(binInfo.toString(), DRINKS_PRODUCT);
-        meatsProduct = new InfoFileParser().getArrayProduct(binInfo.toString(), MEATS_PRODUCT);
-        allProducts = new ArrayList<>();
-        allProducts.addAll(milksProduct);         // milksProduct + drinksProduct + meatsProduct;
-        allProducts.addAll(meatsProduct);
-        allProducts.addAll(drinksProduct);
+        milksProduct =  new FileIOServise().getArrayProduct(binInfo, MILKS_PRODUCT);
+        meatsProduct =  new FileIOServise().getArrayProduct(binInfo, MEATS_PRODUCT);
+        drinksProduct =  new FileIOServise().getArrayProduct(binInfo, DRINKS_PRODUCT);
     }
+
+    public static Deal deal;
     //endregion
 
     public static void main(String[] args) {
 
-        User seller;
+        User seller = null;
         User buyer = null;
         do {
-            seller = setUserInfo("seller");
             if (seller == null) {
-                System.out.println("The seller information needs to be corrected!!!\n");
-                continue;
+                seller = setUserInfo("seller");
+                if (seller == null) {
+                    System.out.println("The seller information needs to be corrected!!!\n");
+                    continue;
+                }
             }
 
             buyer = setUserInfo("buyer");
             if (buyer == null) {
                 System.out.println("The buyer information needs to be corrected");
             }
-        } while ((seller == null) && (buyer == null));
+        } while ((seller == null) || (buyer == null));
 
 
-        ListProduct listProduct = new ListProduct();
-        Deal deal = new Deal(seller, buyer, listProduct);
+        deal = new Deal(seller, buyer, buyerBasket);
         do {
             int pointMenu = mainMenu();
 
             switch (pointMenu) {
                 case 1: shopCatalog(); break;
-                case 2: shopBasket(""); break;
+                case 2: shopBasket(); break;
                 case 3: exitMoment(deal); scan.close(); return;
                 default:
                     System.out.println("You did not select any point.");
@@ -90,8 +84,6 @@ public class Main {
 
         } while(true);
 
-//        User a = User.isValidDataFormat("an", 123.2, LocalDate.parse("08-01-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")), "wergf@gmai.com", "+375334560099");
-//        System.out.println(a);
     }
 
     public static int mainMenu() {
@@ -106,7 +98,7 @@ public class Main {
     public static void shopCatalog() {
         int response;
         do {
-            System.out.println("1. Milks\n2. Meats\n3. Drinks\n4. All products\n5.Back to main menu");
+            System.out.println("1. Milks\n2. Meats\n3. Drinks\n4. All products\n5. Back to main menu");
             response = scan.nextInt();
             switch (response) {
                 case 1: productCatalog(MILKS_PRODUCT); break;
@@ -123,28 +115,50 @@ public class Main {
 
     public static int productCatalog(String productType) {
         int response;
-        List<String> selectedProduct = productType.equals(MILKS_PRODUCT) ? milksProduct :
-        productType.equals(MEATS_PRODUCT) ? meatsProduct :
-        productType.equals(DRINKS_PRODUCT) ? drinksProduct : allProducts;
+        var selectedProduct = productType.equals(MILKS_PRODUCT) ? milksProduct :
+                                        productType.equals(MEATS_PRODUCT) ? meatsProduct :
+                                        productType.equals(DRINKS_PRODUCT) ? drinksProduct : binInfo;
+        selectedProduct.refreshSize();                  // need this method cuz binInfo is deserialized data and has no actual size
         do {
             for (int i = 0; i < selectedProduct.size(); i++) {
-                System.out.println(i + 1 + " - " + selectedProduct.get(i));         //.replace("}, ", "}, \n");
+                System.out.println(i + 1 + " - " + selectedProduct.get(i));
             }
             System.out.println("\n------------------------\n1. Buy position\n2. Go to basket\n3. Back to main menu");
             response = scan.nextInt();
             if (response == 1) {
                 System.out.print("Enter the number position: ");
                 int position = scan.nextInt();
-                System.out.print("Enter the quantity: ");
-                short quantity = scan.nextShort();
-                var e = binInfo.get(position);
+                var e = selectedProduct.get(position - 1);
                 buyerBasket.add(e);
+            } else if (response == 2) {
+                shopBasket();
+            } else {
+                mainMenu();
             }
-        } while(response > 0 && response < 4);
+        } while(response < 0 && response > 4);
         return response;
     }
 
-    private static void shopBasket(String s) {  }
+    private static void shopBasket() {
+        int response;
+
+        for (int i = 0; i < buyerBasket.size(); i++) {
+            System.out.println(i + 1 + " - " + buyerBasket.get(i));
+        }
+        do {
+            System.out.println("\n------------------------\n1. Buy all\n2. Remove position\n3. Back to main menu");
+            response = scan.nextInt();
+            if (response == 1) {
+                deal.deal();
+            } else if (response == 2) {
+                System.out.print("Enter the number of the item to be deleted: ");
+                int deletePosition =  scan.nextInt();
+                buyerBasket.removeAt(deletePosition - 1);
+            } else {
+                mainMenu();
+            }
+        } while(response < 0 && response > 4);
+    }
 
     public static void exitMoment(Deal deal) {
         if (deal.getListProduct().getStorage()[0] == null) {

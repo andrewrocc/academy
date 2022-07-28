@@ -52,6 +52,13 @@ public class ListProduct implements Serializable {
 
     public int capacity() { return storage.length; }
 
+    public void refreshSize() {
+        for (var e : storage) {
+            if (e != null)
+                size++;
+        }
+    }
+
     public int size() { return size; }
 
     public Product[] getStorage() { return storage; }
@@ -106,9 +113,9 @@ public class ListProduct implements Serializable {
 
     @Override
     public String toString() {
-        return "ListProduct{" +
-                "storage = " + Arrays.deepToString(storage).replace("},", "}\n") +
-                '}';
+        return "{ " +
+                Arrays.deepToString(storage).replace("},", "}\n") +
+                " }";
     }
 
     public boolean equals(List<Product> list)

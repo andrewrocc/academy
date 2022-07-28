@@ -1,14 +1,18 @@
 package by.academy.homework3.services.Serializer;
 
+import by.academy.homework3.services.ListProduct;
+
 import java.io.*;
 
 public class FileIOServise<T> {
 
-    private final String PATH;
+    private String PATH;
 
     public FileIOServise(String PATH) {
         this.PATH = PATH;
     }
+
+    public FileIOServise() { }
 
     public <T> Object loadData() {
         try {
@@ -34,5 +38,15 @@ public class FileIOServise<T> {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public ListProduct getArrayProduct(ListProduct listProduct, String productType) {
+        ListProduct l_product = new ListProduct();
+        for (var e : listProduct.getStorage()) {
+            if (e.toString().contains(productType)) {
+                l_product.add(e);
+            }
+        }
+        return l_product;
     }
 }

@@ -91,6 +91,8 @@ public class User {
         var isValidUserEmail = new EmailValidator().validate(userEmail);
         var isValidUserPhone = new BelarusPhoneValidator().validate(userPhone);
         LocalDate dateParse = null;
+
+        // code smell?
         if (isValidUserDate) {
             try {
                 dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
@@ -108,6 +110,11 @@ public class User {
                 dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("d-MM-yyyy"));
             } catch (DateTimeException ex) { } }
 
+            if (dateParse == null) {
+                try {
+                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("d-M-yyyy"));
+                } catch (DateTimeException ex) { } }
+
 
             if (dateParse == null) {
                 try {
@@ -124,6 +131,12 @@ public class User {
             if (dateParse == null) {
                 try {
                     dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("d/MM/yyyy"));
+                } catch (DateTimeException ex) { }
+            }
+
+            if (dateParse == null) {
+                try {
+                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("d/M/yyyy"));
                 } catch (DateTimeException ex) { }
             }
         }
