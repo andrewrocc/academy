@@ -1,7 +1,5 @@
 package by.academy.homework3.services;
 
-import java.time.LocalDate;
-
 public class ValidateDateFormat {
 
     public static final String DATE_PATTERN_FORMAT1 = "(0[1-9]|1\\d|2\\d|3[0-1]|[1-9])/(0[1-9]|1[0-2]|[1-9])/(\\d{4})";

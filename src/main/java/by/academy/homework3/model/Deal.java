@@ -3,6 +3,7 @@ package by.academy.homework3.model;
 import by.academy.homework3.services.ListProduct;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Deal {
@@ -13,6 +14,8 @@ public class Deal {
     private ListProduct listProduct;
 
     private LocalDateTime dealTime, deadLine;
+
+    double totalPrice = 0.0;
     //endregion
 
     //region prop
@@ -91,22 +94,71 @@ public class Deal {
     @Override
     public String toString() {
         return String.format("Deal { seller = '%s', buyer = '%s', list product = '%s', date-time deal = '%tc' }",
-                            seller, buyer, Arrays.deepToString(listProduct.getStorage()), dealTime);
+                seller, buyer, Arrays.deepToString(listProduct.getStorage()), dealTime);
     }
     //endregion
 
     public double totalPrice() {
-        // some math and beautiful code, that not final version
-        double total_price = 0.0;
         for (var e : listProduct.getStorage()) {
-            total_price += (e.getProductPrice() * e.getProductQuantity() * (1 + e.getProductTax()));      // if tax = 3% -> price * 1.03
+            if (e == null) {
+                break;
+            }
+            totalPrice += (e.getProductPrice() * e.getProductQuantity() * (1 + e.getProductTax()));      // if tax = 3% -> price * 1.03
         }
-        return total_price;
+        return totalPrice;
+    }
+
+    private boolean dealTransaction() {
+        if (buyer.getUserMoney() > totalPrice) {
+            buyer.setUserMoney(buyer.getUserMoney() - totalPrice);
+            seller.setUserMoney(seller.getUserMoney() + totalPrice);
+            return true;
+        }
+        return false;
     }
 
     public void deal() {
-        // some math and beautiful code
+        if (listProduct.isEmpty()) {
+            System.out.println("Your check list is empty.");
+            return;
+        }
         dealTime = LocalDateTime.now();
-        deadLine = deadLine.plusDays(10);
+        deadLine = dealTime.plusDays(10);
+        totalPrice = totalPrice();
+        if (dealTransaction()) {
+            printCheckList();
+        } else {
+            System.out.printf("Buyer %s, has no enough money for the deal.\n", buyer.getUserName());
+        }
+    }
+
+    private void printCheckList() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        System.out.printf(
+                """
+                        -------------------------------------------------
+                        |                  Check list                    |
+                        -------------------------------------------------
+                               Buyer - %s,                              \s
+                               Seller - %s,                             \s
+                               Deal date - %s                           \s
+                        -------------------------------------------------
+                        """
+                , buyer.getUserName(), seller.getUserName(), dealTime.format(formatter));
+
+        for (int i = 0; i < listProduct.size(); i++) {
+            int tabSymbols = (listProduct.get(i).productName.length() >= 7) ? 2 : 4;
+            System.out.printf(
+                    (i + 1) + " " + "%s" + "\t".repeat(tabSymbols) + "%d" + "\t".repeat(2) + "%.2f" + "\t".repeat(3) + "%.2f\n",
+                    listProduct.get(i).productName, listProduct.get(i).productQuantity, listProduct.get(i).productTax, listProduct.get(i).productPrice);
+        }
+
+        System.out.printf(
+                """
+                        -------------------------------------------------
+                        |                    Total price : %.2f        |
+                        -------------------------------------------------
+                        """
+                , totalPrice);
     }
 }

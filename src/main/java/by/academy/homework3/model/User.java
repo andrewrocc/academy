@@ -4,6 +4,8 @@ import by.academy.homework3.services.BelarusPhoneValidator;
 import by.academy.homework3.services.EmailValidator;
 import by.academy.homework3.services.ValidateDateFormat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -66,11 +68,12 @@ public class User {
     //endregion
 
     /**
-     * <p>This class has private constructor need to check
+     * <p>This class has private constructor because some parameters need to be checked
+     *
      * @param dateOfBirth checkable value
-     * @param userEmail checkable value
-     * @param userPhone checkable value<p>
-     * */
+     * @param userEmail   checkable value
+     * @param userPhone   checkable value<p>
+     */
     public User(String userName, double userMoney, LocalDate dateOfBirth, String userEmail, String userPhone) {
         this.userName = userName;
         this.userMoney = userMoney;
@@ -83,63 +86,26 @@ public class User {
      * <p>This method checks the values and then creates a valid instance of the class
      *
      * @param dateOfBirth checkable value
-     * @param userEmail checkable value
-     * @param userPhone checkable value
-    * */
+     * @param userEmail   checkable value
+     * @param userPhone   checkable value
+     */
     public static User isValidDataFormat(String userName, double userMoney, String dateOfBirth, String userEmail, String userPhone) {       //LocalDate
         var isValidUserDate = new ValidateDateFormat().isValidateDate(dateOfBirth);
         var isValidUserEmail = new EmailValidator().validate(userEmail);
         var isValidUserPhone = new BelarusPhoneValidator().validate(userPhone);
         LocalDate dateParse = null;
 
-        // code smell?
-        if (isValidUserDate) {
-            try {
-                dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            } catch (DateTimeException ex) { }
+        String[] dateFormatPatterns = {"dd-MM-yyyy", "dd-M-yyyy", "d-MM-yyyy", "d-M-yyyy",
+                                        "dd/MM/yyyy", "dd/M/yyyy", "d/MM/yyyy", "d/M/yyyy"};
 
+        for (int i = 0; i < dateFormatPatterns.length; i++) {
             if (dateParse == null) {
                 try {
-                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd-M-yyyy"));
-                } catch (DateTimeException ex) {
-                }
-            }
-
-            if (dateParse == null) {
-            try {
-                dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("d-MM-yyyy"));
-            } catch (DateTimeException ex) { } }
-
-            if (dateParse == null) {
-                try {
-                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("d-M-yyyy"));
-                } catch (DateTimeException ex) { } }
-
-
-            if (dateParse == null) {
-                try {
-                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                } catch (DateTimeException ex) { }
-            }
-
-            if (dateParse == null) {
-                try {
-                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd/M/yyyy"));
-                } catch (DateTimeException ex) { }
-            }
-
-            if (dateParse == null) {
-                try {
-                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("d/MM/yyyy"));
-                } catch (DateTimeException ex) { }
-            }
-
-            if (dateParse == null) {
-                try {
-                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("d/M/yyyy"));
+                    dateParse = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern(dateFormatPatterns[i]));
                 } catch (DateTimeException ex) { }
             }
         }
+
         return (isValidUserDate & isValidUserEmail & isValidUserPhone) ? new User(userName, userMoney, dateParse, userEmail, userPhone) : null;
     }
 

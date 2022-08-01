@@ -1,15 +1,13 @@
 package by.academy.homework3;
 
-import by.academy.homework3.model.*;
-import by.academy.homework3.services.*;
+import by.academy.homework3.model.Deal;
+import by.academy.homework3.model.User;
+import by.academy.homework3.services.ListProduct;
 import by.academy.homework3.services.Serializer.FileIOServise;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.Scanner;
 
 public class Main {
 
@@ -28,7 +26,7 @@ public class Main {
 
     private static final String MEATS_PRODUCT = "Meats";
 
-    private static FileIOServise<ListProduct> ioServise = new FileIOServise(currentDirectory);
+    private static final FileIOServise<ListProduct> ioServise = new FileIOServise(currentDirectory);
 
     private static ListProduct buyerBasket = new ListProduct();
 
@@ -42,9 +40,9 @@ public class Main {
 
     static {
         binInfo = (ListProduct) ioServise.loadData();
-        milksProduct =  new FileIOServise().getArrayProduct(binInfo, MILKS_PRODUCT);
-        meatsProduct =  new FileIOServise().getArrayProduct(binInfo, MEATS_PRODUCT);
-        drinksProduct =  new FileIOServise().getArrayProduct(binInfo, DRINKS_PRODUCT);
+        milksProduct = new FileIOServise().getArrayProduct(binInfo, MILKS_PRODUCT);
+        meatsProduct = new FileIOServise().getArrayProduct(binInfo, MEATS_PRODUCT);
+        drinksProduct = new FileIOServise().getArrayProduct(binInfo, DRINKS_PRODUCT);
     }
 
     public static Deal deal;
@@ -69,20 +67,24 @@ public class Main {
             }
         } while ((seller == null) || (buyer == null));
 
+        System.out.println("\n" + buyer);
+        System.out.println(seller);
 
         deal = new Deal(seller, buyer, buyerBasket);
         do {
             int pointMenu = mainMenu();
 
             switch (pointMenu) {
-                case 1: shopCatalog(); break;
-                case 2: shopBasket(); break;
-                case 3: exitMoment(deal); scan.close(); return;
-                default:
-                    System.out.println("You did not select any point.");
+                case 1 -> shopCatalog();
+                case 2 -> shopBasket();
+                case 3 -> {
+                    exitMoment(deal);
+                    scan.close();
+                    return;
+                }
+                default -> System.out.println("You did not select any point.");
             }
-
-        } while(true);
+        } while (true);
 
     }
 
@@ -97,51 +99,55 @@ public class Main {
 
     public static void shopCatalog() {
         int response;
-        do {
-            System.out.println("1. Milks\n2. Meats\n3. Drinks\n4. All products\n5. Back to main menu");
-            response = scan.nextInt();
-            switch (response) {
-                case 1: productCatalog(MILKS_PRODUCT); break;
-                case 2: productCatalog(MEATS_PRODUCT); break;
-                case 3: productCatalog(DRINKS_PRODUCT); return;
-                case 4: productCatalog(""); return;
-                case 5: return;
-                default:
-                    System.out.println("You did not select any point.");
-            }
-
-        } while(true);
+        System.out.println("1. Milks\n2. Meats\n3. Drinks\n4. All products\n5. Back to main menu");
+        response = scan.nextInt();
+        switch (response) {
+            case 1 -> productCatalog(MILKS_PRODUCT);
+            case 2 -> productCatalog(MEATS_PRODUCT);
+            case 3 -> productCatalog(DRINKS_PRODUCT);
+            case 4 -> productCatalog("");
+            case 5 -> mainMenu();
+            default -> System.out.println("You did not select any point.");
+        }
     }
 
-    public static int productCatalog(String productType) {
+    public static void productCatalog(String productType) {         // int
         int response;
         var selectedProduct = productType.equals(MILKS_PRODUCT) ? milksProduct :
                                         productType.equals(MEATS_PRODUCT) ? meatsProduct :
                                         productType.equals(DRINKS_PRODUCT) ? drinksProduct : binInfo;
         selectedProduct.refreshSize();                  // need this method cuz binInfo is deserialized data and has no actual size
-        do {
             for (int i = 0; i < selectedProduct.size(); i++) {
                 System.out.println(i + 1 + " - " + selectedProduct.get(i));
             }
             System.out.println("\n------------------------\n1. Buy position\n2. Go to basket\n3. Back to main menu");
             response = scan.nextInt();
-            if (response == 1) {
+        switch (response) {
+            case 1 -> {
                 System.out.print("Enter the number position: ");
                 int position = scan.nextInt();
-                var e = selectedProduct.get(position - 1);
-                buyerBasket.add(e);
-            } else if (response == 2) {
-                shopBasket();
-            } else {
-                mainMenu();
+                if (position > selectedProduct.size()) {
+                    System.out.println("Incorrect value.");
+                } else {
+                    System.out.print("Enter the quantity position: ");
+                    int quantity = scan.nextInt();
+                    var e = selectedProduct.get(position - 1);
+                    e.setProductQuantity((short) quantity);
+                    buyerBasket.add(e);
+                }
             }
-        } while(response < 0 && response > 4);
-        return response;
+            case 2 -> shopBasket();
+            case 3 -> mainMenu();
+            default -> System.out.println("Incorrect value.");
+        }
     }
 
     private static void shopBasket() {
         int response;
-
+        if (buyerBasket.isEmpty()) {
+            System.out.println("Your basket is empty.");
+            return;
+        }
         for (int i = 0; i < buyerBasket.size(); i++) {
             System.out.println(i + 1 + " - " + buyerBasket.get(i));
         }
@@ -150,156 +156,62 @@ public class Main {
             response = scan.nextInt();
             if (response == 1) {
                 deal.deal();
+                System.exit(0);
             } else if (response == 2) {
                 System.out.print("Enter the number of the item to be deleted: ");
-                int deletePosition =  scan.nextInt();
+                int deletePosition = scan.nextInt();
                 buyerBasket.removeAt(deletePosition - 1);
             } else {
                 mainMenu();
             }
-        } while(response < 0 && response > 4);
+        } while (response < 0 && response > 4);
     }
 
     public static void exitMoment(Deal deal) {
-        if (deal.getListProduct().getStorage()[0] == null) {
-            System.out.println("Your check is empty.");
-        } else {
-            System.out.println(deal);
-        }
+        System.out.println(
+                (deal.getListProduct().isEmpty())
+                        ? "Your basket is empty."
+                        : deal
+        );
     }
 
+    // this is so long latency to enter all variables cuz, made full auto,
+    // (uncomment the lines if you need to enter manually & comment all condition)
     public static User setUserInfo(String userType) {
+//        String userName, userEmail, userPhone;
+//        double userMoney;
+//        LocalDate dateOfBirth;
+
+        // comment this all condition
         String userName, userEmail, userPhone;
         double userMoney;
-        LocalDate dateOfBirth;
+        String dateOfBirth;
+        if (userType.equals("buyer")) {
+            userName = "lewis";
+            userEmail = "ajhgfawf@mail.com";
+            userPhone = "+375663330022";
+            userMoney = 2345345.0;
+            dateOfBirth = "12-12-2000";
+        } else {
+            userName = "tom";
+            userEmail = "ajhgfawf@mail.com";
+            userPhone = "+375663330022";
+            userMoney = 124124.0;
+            dateOfBirth = "12-12-2000";
+        }
+
         System.out.print("Enter the " + userType + " name: ");
-        userName = scan.nextLine();
+//        userName = scan.nextLine();
         System.out.print("Enter the " + userType + " email: ");
-        userEmail = scan.nextLine();
+//        userEmail = scan.nextLine();
         System.out.print("Enter the " + userType + " phone(+357...): ");
-        userPhone = scan.nextLine();
+//        userPhone = scan.nextLine();
         System.out.print("Enter the " + userType + " money: ");
-        userMoney = scan.nextDouble();
+//        userMoney = scan.nextDouble();
         System.out.print("Enter the " + userType + " date of birth(d-m-y): ");
-        String dateString = scan.nextLine();
-        dateString = scan.nextLine();
-//        dateOfBirth = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        return User.isValidDataFormat(userName, userMoney, dateString, userEmail, userPhone);
+//        String dateString = scan.nextLine();
+//        dateString = scan.nextLine();
+//        return User.isValidDataFormat(userName, userMoney, dateString, userEmail, userPhone);
+        return User.isValidDataFormat(userName, userMoney, dateOfBirth, userEmail, userPhone);
     }
-
-    private static void task_8() {
-//        System.out.print("Enter user name: ");
-//        String userName = scan.nextLine();
-//        System.out.print("Enter user phone: ");
-//        String phone = scan.nextLine();
-//        System.out.print("Enter user email: ");
-//        String email = scan.nextLine();
-//        String[] bDate = task_3();
-//
-//        if (Boolean.valueOf(bDate[1]).equals(true)) {
-//            User user = new User(userName, bDate[0], phone, email);
-//            if (user.getPhone() != null || user.getEmail() != null) {
-//                System.out.println(user);
-//            }
-//        }
-//        else {
-//            System.out.println("Incorrect date.");
-//        }
-    }
-
-    private static void task_6() {
-//        FileIOServise ioServise = new FileIOServise(currentDirectory);
-//
-//        // serialise data (save data)
-//        ListProduct listToFile = new ListProduct();
-//        listToFile.add(new Milks("Milk",15.5, (short) 1, 0.3, true, 5.1));
-//        listToFile.add(new Meats("Chicken", 26.99, (short) 1, 0.3, true, 3.23));
-//        listToFile.add(new Milks("Cheese", 45.0, (short) 1, 0.3, true, 0.561));
-//        listToFile.add(new Milks("Ice-cream", 9.99, (short) 1, 0.3, true, 6.98));
-//        listToFile.add(new Meats("Pizza",  31.95, (short) 1, 0.3, true, 3.56));
-//        listToFile.add(new Drinks("Coke", 7.0, (short) 1, 0.3, true, 6.1));
-//        listToFile.add(new Drinks("Coffee", 7.0, (short) 1, 0.3, true, 2.0));
-//        listToFile.add(new Drinks("Tea", 7.0, (short) 1, 0.3, true, 7.8));
-//        listToFile.add(new Drinks("Water", 7.0, (short) 1, 0.3, true, 3.1));
-//        listToFile.add(new Milks("Sour-cream", 4.0, (short) 1, 0.3, true, 6.1));
-//        ioServise.saveData(listToFile);
-//
-//        // deserialize data(load data)
-//        ListProduct list = (ListProduct) ioServise.loadData();
-//        System.out.println(list.toString());
-    }
-
-    private static void task_5() {
-        // Examples:
-        //  +111 (202) 555-0125, +111 202 555 0125, +1112025550125, +111 202-555-0125, +211 (202) 555-0125, (202) 555-0125, 202-555-0125, +375 (29) 623 15 64, +375 29 623-15-64, +375296231564, +375 29 623 15 64, 623 15 64, 6231564
-        System.out.print("Enter one or more numbers(separated by commas ', '): ");
-        String[] phone_number = scan.nextLine().split(", ");
-        AmericanPhoneValidator phoneValidator = new AmericanPhoneValidator();
-        System.out.println("American phone validator:");
-        for (var e : phone_number) {
-            System.out.println((e.length() < 17 ? e + "\t\t\t" : e + "\t\t") + (phoneValidator.validate(e) ? "valid" : "not valid"));
-        }
-
-        System.out.println("----------------------------------------");
-
-        System.out.println("Belarus phone validator:");
-        BelarusPhoneValidator phoneValidator_BLR = new BelarusPhoneValidator();
-        for (var e : phone_number) {
-            System.out.println((e.length() < 17 ? e + "\t\t\t" : e + "\t\t") + (phoneValidator_BLR.validate(e) ? "valid" : "not valid"));
-        }
-
-        System.out.println("----------------------------------------");
-
-        // Examples:
-        // username@domain.com, user.name@lol.com, asldkj34@gmail.com, daink_2055@mail.ru, 123411235@qweqwr, 123123123@, n1@gmail.blr, google@.com, q123a_q234e.@mail.ru
-        System.out.print("Enter emails (separated by commas ', '): ");
-        String[] emails = scan.nextLine().split(", ");
-        EmailValidator e_validator = new EmailValidator();
-        System.out.println("Email validator:");
-        for (var e :emails) {
-            System.out.println((e.length() < 15 ? e + "\t\t\t" : e + "\t\t") + (e_validator.validate(e) ? "valid" : "not valid"));
-        }
-    }
-
-    private static void task_4(){
-        String user_date = scan.nextLine();
-        byte isException_b = 0b001;
-        if (user_date.length() != 10) {
-            System.out.println("Incorrect date");
-            return;
-        }
-
-        String[] patternsDateFormat = { "dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy" };
-        for (int i = 0; i < patternsDateFormat.length; i++) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(patternsDateFormat[i]);
-            try {
-                Date date = simpleDateFormat.parse(user_date);
-                printDate(simpleDateFormat, date);
-                break;
-            } catch (ParseException ex) {
-                isException_b <<= 1;
-            }
-        }
-
-        System.out.println(((isException_b ^ 0b1000) == 0) ? "Incorrect date" : null);
-    }
-
-    private static void printDate(SimpleDateFormat simpleFormat, Date date) {
-        simpleFormat.applyPattern("dd");
-        System.out.println("Day: " + simpleFormat.format(date));
-        simpleFormat.applyPattern("MM");
-        System.out.println("Month: " + simpleFormat.format(date));
-        simpleFormat.applyPattern("yyyy");
-        System.out.println("Year: " + simpleFormat.format(date));
-    }
-
-//    private static String[] task_3() {
-//        System.out.print("Enter the date format(dd/mm/yyyy) or (dd-mm-yyyy): ");
-//        String date = scan.nextLine();
-//        boolean res_opt1 = date.matches(DATE_PATTERN);
-//        boolean res_opt2 = date.matches(DATE_PATTERN_V1);
-//        System.out.println(res_opt1 || res_opt2);
-//        return new String[] { date, String.valueOf(res_opt1 || res_opt2)};
-//    }
-
 }

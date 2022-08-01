@@ -27,10 +27,6 @@ public class ListProduct implements Serializable {
         size = 0;
     }
 
-    /**
-     * <p>This class is a wrapper for a standard int array (in other words, a list of primitives).</p>
-     * @param capacity the initial capacity of the list
-     */
     public ListProduct(int capacity) {
         storage = new Product[capacity];
         size = 0;
@@ -50,18 +46,26 @@ public class ListProduct implements Serializable {
         }
     }
 
-    public int capacity() { return storage.length; }
+    public int capacity() {
+        return storage.length;
+    }
 
     public void refreshSize() {
-        for (var e : storage) {
-            if (e != null)
-                size++;
+        if (size == 0) {
+            for (var e : storage) {
+                if (e != null)
+                    size++;
+            }
         }
     }
 
-    public int size() { return size; }
+    public int size() {
+        return size;
+    }
 
-    public Product[] getStorage() { return storage; }
+    public Product[] getStorage() {
+        return storage;
+    }
 
     public Product get(int position) {
         rangeCheck(position);
@@ -73,16 +77,26 @@ public class ListProduct implements Serializable {
         storage[index] = value;
     }
 
-    public void add(Product value) { insertAt(size, value); }
+    public boolean isEmpty() {
+        for (var e : storage) {
+            if (e != null)
+                return false;
+        }
+        return true;
+    }
+
+    public void add(Product value) {
+        insertAt(size, value);
+    }
 
     public void insertAt(int index, Product value) {
-        if(index < 0 || index > size)
+        if (index < 0 || index > size)
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
 
         if (capacity() <= size)
             ensureCapacity(size + 1);
         int move_count = size - index;              // number of elements to shift
-        if(move_count > 0)
+        if (move_count > 0)
             System.arraycopy(storage, index, storage, index + 1, move_count);
 
         storage[index] = value;
@@ -118,11 +132,10 @@ public class ListProduct implements Serializable {
                 " }";
     }
 
-    public boolean equals(List<Product> list)
-    {
+    public boolean equals(List<Product> list) {
         boolean success = (list.size() == size());
-        if(success) {
-            for(int idx = 0; success && (idx < size()); ++idx) {
+        if (success) {
+            for (int idx = 0; success && (idx < size()); ++idx) {
                 success = success && (get(idx) == list.get(idx));
             }
         }
