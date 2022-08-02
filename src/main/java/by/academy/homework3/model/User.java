@@ -74,7 +74,7 @@ public class User {
      * @param userEmail   checkable value
      * @param userPhone   checkable value<p>
      */
-    public User(String userName, double userMoney, LocalDate dateOfBirth, String userEmail, String userPhone) {
+    private User(String userName, double userMoney, LocalDate dateOfBirth, String userEmail, String userPhone) {
         this.userName = userName;
         this.userMoney = userMoney;
         this.dateOfBirth = dateOfBirth;
