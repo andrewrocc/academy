@@ -130,9 +130,9 @@ public class Main {
                     System.out.println("Incorrect value.");
                 } else {
                     System.out.print("Enter the quantity position: ");
-                    int quantity = scan.nextInt();
+                    short quantity = scan.nextShort();
                     var e = selectedProduct.get(position - 1);
-                    e.setProductQuantity((short) quantity);
+                    e.setProductQuantity(quantity);
                     buyerBasket.add(e);
                 }
             }
