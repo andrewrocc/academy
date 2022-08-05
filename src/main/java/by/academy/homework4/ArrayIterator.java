@@ -1,5 +1,8 @@
 package by.academy.homework4;
 
+import java.net.CookieHandler;
+import java.util.Collection;
+
 class ArrayIterator<T> {
 
     //region fields
@@ -10,9 +13,10 @@ class ArrayIterator<T> {
     private final short INITIAL_CAPACITY = 10;
     //endregion
 
+    public ArrayIterator() { super(); }
 
     public ArrayIterator(T[] array) {
-        this.array = array;
+         this.array = array;
     }
 
     private void preLoad() {
@@ -30,7 +34,11 @@ class ArrayIterator<T> {
         if (!hasNext()) {
             return null;
         }
+        return array[currentPosition++];
+    }
 
-        return array[currentPosition];
+    public ArrayIterator<T> iterator(Collection<?> value) {
+        T[] array = (T[]) value.toArray();
+        return new ArrayIterator<>(array);
     }
 }

@@ -1,7 +1,34 @@
 package by.academy.homework4;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class Main {
+
+    public static final String DATE_PATTERN_FORMAT2 = "(0[1-9]|1\\d|2\\d|3[0-1]|[1-9])-(0[1-9]|1[0-2]|[1-9])-(\\d{4})";
     public static void main(String[] args) {
+        //task_1
+        CustomDate cDate = new CustomDate(2028, 8, 1);
+        cDate.getDayOfWeek();
+        CustomDate d = new CustomDate(2020, 8, 1);
+        System.out.println(cDate.getNumberOfDays(cDate, d));
+        System.out.println(cDate.isLeapYear());
+        Scanner scan = new Scanner(System.in);
+        String dateString;
+        boolean isValidDate;
+        do {
+            System.out.print("Enter the date(dd-mm-yyyy) : ");
+            dateString = scan.nextLine();
+            isValidDate = validateDate(dateString);
+        } while(!isValidDate);
+        CustomDate customDate_stringFormat = new CustomDate(dateString);
+        System.out.println(customDate_stringFormat);
+
+        //task_2
+        Body test_android_0001 = new Body();
+        test_android_0001.live();
+
         //task_3
         DynamicArrayT<Integer> a = new DynamicArrayT<>(10);
         a.add(5);
@@ -22,8 +49,15 @@ public class Main {
         System.out.println("Last not null element index: " + a.getLastElementIndex());
 
         // task_4
-        ArrayIterator<Integer> iterator = new ArrayIterator<>(new Integer[]{1, 2, 3, 4, 5});
-        System.out.println(iterator.hasNext());
-        System.out.println(iterator.next());
+        ArrayList<String> aList = new ArrayList<String>(Arrays.asList("one", "tow", "three", "four", "five"));
+        ArrayIterator<Integer> aIterator = new ArrayIterator<>();
+        ArrayIterator<Integer> iterator = aIterator.iterator(aList);
+        while (iterator.hasNext()) {
+            System.out.print(iterator.next() + " ");
+        }
+    }
+
+    public static boolean validateDate(String dateString) {
+        return dateString.matches(DATE_PATTERN_FORMAT2);
     }
 }
