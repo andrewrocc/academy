@@ -4,15 +4,15 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @State(Scope.Thread)
+@Fork(value = 2)
 public class BenchmarkCodeTest {
 
-    @Param({"10"})       //1_000_000 this value doesn't have sense to set cuz latency will be too long
-    private int array_size;
+    @Param({ "100000" })                      //1_000_000 this value doesn't have sense to set cuz latency will be too long
+    private int array_size;                   //, INITIAL_SIZE;   // the second value is needed to optimize arraylist performance
 
-    private List<Integer> array;
+    private ArrayList<Integer> array;
 
     private LinkedList<Integer> linked;
 
@@ -23,31 +23,38 @@ public class BenchmarkCodeTest {
     @Setup
     public void prepare() {
         randomValuesArray = new int[array_size];
-        linked = new LinkedList<>();
         array = new ArrayList<>();
+        linked = new LinkedList<>();
         for (int i = 0; i < array_size; i++) {
             randomValuesArray[i] = rand.nextInt(Integer.MAX_VALUE >> 1);
+            array.add(randomValuesArray[i]);
+            linked.addLast(randomValuesArray[i]);
         }
     }
 
+//    @TearDown
+//    public void tearDown() {
+//        System.gc();
+//    }
+
     @Benchmark
-    @BenchmarkMode(Mode.AverageTime)
-    @Measurement(iterations = 3, time = 1, timeUnit = TimeUnit.MILLISECONDS)
-    @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
-    @Fork(value = 1)
-    @OutputTimeUnit(TimeUnit.NANOSECONDS)
+    @BenchmarkMode(Mode.Throughput)
+//    @Measurement(iterations = 5, time = 500, timeUnit = TimeUnit.MILLISECONDS)
+//    @Warmup(iterations = 5, time = 500, timeUnit = TimeUnit.MILLISECONDS)
+//    @Fork(value = 1)
+//    @OutputTimeUnit(TimeUnit.NANOSECONDS)
 //    @Timeout(time = 5, timeUnit = TimeUnit.SECONDS)
-    public ArrayList<Integer> setValuesArrayListAndGetRandomValue() {
-        ArrayList<Integer> listResult = new ArrayList<>();
+    public void addValuesArrayList(Blackhole blackhole) {
+        ArrayList<Integer> arrayList = new ArrayList<>();
         for (int i = 0; i < array_size; i++) {
-            listResult.add(i);
+            arrayList.add(randomValuesArray[i]);
         }
-        return listResult;
+        blackhole.consume(arrayList);
     }
 
     @Benchmark
-    @BenchmarkMode(Mode.AverageTime)
-    public void getRandomValue(Blackhole blackhole) {
+    @BenchmarkMode(Mode.Throughput)
+    public void getRandomValueArrayList(Blackhole blackhole) {
         int endValue = array_size;
         while (endValue != 0) {
             array.get(rand.nextInt(array_size - 1));
@@ -56,20 +63,23 @@ public class BenchmarkCodeTest {
         blackhole.consume(endValue);
     }
 
+
     @Benchmark
-    @BenchmarkMode(Mode.AverageTime)
-    @Measurement(iterations = 3, time = 1, timeUnit = TimeUnit.MILLISECONDS)
-    @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
-    @Fork(value = 1)
-    @OutputTimeUnit(TimeUnit.NANOSECONDS)
-//    @Timeout(time = 5, timeUnit = TimeUnit.SECONDS)
-    public void setValuesLinkedListAndGetRandomValue(Blackhole blackhole) {
+    @BenchmarkMode(Mode.Throughput)
+    public void addValuesLinkedList(Blackhole blackhole) {
+        LinkedList<Integer> linkedList = new LinkedList<>();
         for (int i = 0; i < array_size; i++) {
-            linked.addLast(randomValuesArray[i]);
+            linkedList.addLast(randomValuesArray[i]);
         }
+        blackhole.consume(linkedList);
+    }
+
+    @Benchmark
+    @BenchmarkMode(Mode.Throughput)
+    public void getRandomValueLinkedList(Blackhole blackhole) {
         int endValue = array_size;
         while (endValue != 0) {
-            linked.get(rand.nextInt(array_size));
+            linked.get(rand.nextInt(array_size - 1));
             endValue--;
         }
         blackhole.consume(endValue);
