@@ -4,19 +4,23 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @State(Scope.Thread)
-@Fork(value = 2)
+@Fork(value = 1)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class BenchmarkCodeTest {
 
     @Param({ "100000" })                      //1_000_000 this value doesn't have sense to set cuz latency will be too long
-    private int array_size;                   //, INITIAL_SIZE;   // the second value is needed to optimize arraylist performance
+    private int array_size;
 
     private ArrayList<Integer> array;
 
     private LinkedList<Integer> linked;
 
     private int[] randomValuesArray;
+
+    private int[] randomIndexes = { 100, 999, 10000, 10, 54842, 10, 3490, 251, 76584, 11111 };
 
     private Random rand = new Random();
 
@@ -32,13 +36,8 @@ public class BenchmarkCodeTest {
         }
     }
 
-//    @TearDown
-//    public void tearDown() {
-//        System.gc();
-//    }
-
     @Benchmark
-    @BenchmarkMode(Mode.Throughput)
+    @BenchmarkMode(Mode.AverageTime)
 //    @Measurement(iterations = 5, time = 500, timeUnit = TimeUnit.MILLISECONDS)
 //    @Warmup(iterations = 5, time = 500, timeUnit = TimeUnit.MILLISECONDS)
 //    @Fork(value = 1)
@@ -53,19 +52,17 @@ public class BenchmarkCodeTest {
     }
 
     @Benchmark
-    @BenchmarkMode(Mode.Throughput)
+    @BenchmarkMode(Mode.AverageTime)
     public void getRandomValueArrayList(Blackhole blackhole) {
-        int endValue = array_size;
-        while (endValue != 0) {
-            array.get(rand.nextInt(array_size - 1));
-            endValue--;
+        for (int i = 0; i < randomIndexes.length; i++) {
+            array.get(randomIndexes[i]);
         }
-        blackhole.consume(endValue);
+        blackhole.consume(array);
     }
 
 
     @Benchmark
-    @BenchmarkMode(Mode.Throughput)
+    @BenchmarkMode(Mode.AverageTime)
     public void addValuesLinkedList(Blackhole blackhole) {
         LinkedList<Integer> linkedList = new LinkedList<>();
         for (int i = 0; i < array_size; i++) {
@@ -75,13 +72,11 @@ public class BenchmarkCodeTest {
     }
 
     @Benchmark
-    @BenchmarkMode(Mode.Throughput)
+    @BenchmarkMode(Mode.AverageTime)
     public void getRandomValueLinkedList(Blackhole blackhole) {
-        int endValue = array_size;
-        while (endValue != 0) {
-            linked.get(rand.nextInt(array_size - 1));
-            endValue--;
+        for (int i = 0; i < randomIndexes.length; i++) {
+            linked.get(randomIndexes[i]);
         }
-        blackhole.consume(endValue);
+        blackhole.consume(linked);
     }
 }
