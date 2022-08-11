@@ -1,17 +1,12 @@
 package by.academy.homework4;
 
-import java.net.CookieHandler;
 import java.util.Collection;
 
-class ArrayIterator<T> {
+public class ArrayIterator<T> {
 
-    //region fields
     private int currentPosition = 0;
 
     private T[] array;
-
-    private final short INITIAL_CAPACITY = 10;
-    //endregion
 
     public ArrayIterator() { super(); }
 
@@ -19,14 +14,7 @@ class ArrayIterator<T> {
          this.array = array;
     }
 
-    private void preLoad() {
-        if (array.length == 0) {
-            array = (T[]) new Object[INITIAL_CAPACITY];
-        }
-    }
-
     public boolean hasNext() {
-        preLoad();
         return currentPosition < array.length;
     }
 
