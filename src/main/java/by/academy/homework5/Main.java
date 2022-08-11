@@ -12,7 +12,7 @@ class Main {
         //task 1
 //        System.out.println(task_1(new ArrayList<>(List.of(1, 1, 1, 2, 3, 4, 4, 4, 5, 6, 7, 0, 0, 8))));
 
-//        task_2();
+        task_2();
 
 //        task_3();
 
@@ -22,7 +22,7 @@ class Main {
 
 //        task_6();
 
-        task_7();
+//        task_7();
     }
 
     public static void task_7() {
@@ -40,7 +40,7 @@ class Main {
         try {
             DoublyLinkedListLib.printDoublyLinkedList(reversedList, " ");
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            System.out.println(ex.getMessage());
         }
         finally {
             scan.close();

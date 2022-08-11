@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Thread)
-@Fork(value = 1)
+@Fork(value = 2)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class BenchmarkCodeTest {
 
@@ -60,6 +60,14 @@ public class BenchmarkCodeTest {
         blackhole.consume(array);
     }
 
+    @Benchmark
+    @BenchmarkMode(Mode.AverageTime)
+    public void insertInMiddleArrayList(Blackhole blackhole) {
+        for (int i = 0; i < randomIndexes.length; i++) {
+            array.add((array.size() >> 1), randomIndexes[i]);
+        }
+        blackhole.consume(array);
+    }
 
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
@@ -76,6 +84,15 @@ public class BenchmarkCodeTest {
     public void getRandomValueLinkedList(Blackhole blackhole) {
         for (int i = 0; i < randomIndexes.length; i++) {
             linked.get(randomIndexes[i]);
+        }
+        blackhole.consume(linked);
+    }
+
+    @Benchmark
+    @BenchmarkMode(Mode.AverageTime)
+    public void insertInMiddleLinkedList(Blackhole blackhole) {
+        for (int i = 0; i < randomIndexes.length; i++) {
+            linked.add((linked.size() >> 1), randomIndexes[i]);
         }
         blackhole.consume(linked);
     }
