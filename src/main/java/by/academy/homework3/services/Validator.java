@@ -1,6 +1,12 @@
 package by.academy.homework3.services;
 
+import java.util.regex.Pattern;
+
 interface Validator {
 
-    boolean validate(String message);
+    default boolean validate(String message) {
+        return getPattern().matcher(message).matches();
+    }
+
+    Pattern getPattern();
 }
