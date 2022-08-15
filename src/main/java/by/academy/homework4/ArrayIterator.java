@@ -1,14 +1,10 @@
 package by.academy.homework4;
 
-import java.util.Collection;
-
 public class ArrayIterator<T> {
 
     private int currentPosition = 0;
 
     private T[] array;
-
-    public ArrayIterator() { super(); }
 
     public ArrayIterator(T[] array) {
          this.array = array;
@@ -25,8 +21,7 @@ public class ArrayIterator<T> {
         return array[currentPosition++];
     }
 
-    public ArrayIterator<T> iterator(Collection<?> value) {
-        T[] array = (T[]) value.toArray();
+    public ArrayIterator<T> iterator() {
         return new ArrayIterator<>(array);
     }
 }

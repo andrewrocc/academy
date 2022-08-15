@@ -1,7 +1,5 @@
 package by.academy.homework4;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -49,9 +47,9 @@ public class Main {
         System.out.println("Last not null element index: " + a.getLastElementIndex());
 
         // task_4
-        ArrayList<String> aList = new ArrayList<String>(Arrays.asList("one", "tow", "three", "four", "five"));
-        ArrayIterator<Integer> aIterator = new ArrayIterator<>();
-        ArrayIterator<Integer> iterator = aIterator.iterator(aList);
+        String[] aList = { "one", "tow", "three", "four", "five" };
+        ArrayIterator<String> aIterator = new ArrayIterator<>(aList);
+        ArrayIterator<String> iterator = aIterator.iterator();
         while (iterator.hasNext()) {
             System.out.print(iterator.next() + " ");
         }
