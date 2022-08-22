@@ -5,14 +5,14 @@ import java.time.LocalDate;
 class User extends Person {
 
     //region fields
-    private String login = "no set user name";
+    private String login = "no set name";
 
-    private String password = "null admin";
+    private String password = "no set password";
 
-    private String email = "null email";
+    public String email = "no set email";
     //endregion
 
-    public User() { super(); }
+    public User() { }
 
     public User(String firstName, String lastName, short age, LocalDate birthDate, String login,
                 String password, String email) {
@@ -23,20 +23,20 @@ class User extends Person {
     }
 
     private void printUserInfo() {
-        System.out.println(getFirstName() + " " + getLastName()
-                            + " " + getAge() + " " + getBirthDate()
-                            + " " + this.login + " " + this.email +
+        System.out.println(getFirstName() + "\n" + getLastName()
+                            + "\n" + getAge() + "\n" + getBirthDate()
+                            + "\n" + getLogin() + "\n" + getEmail() + "\n" +
                 password.replaceAll(password, "*".repeat(password.length())));
     }
 
     //region prop
-//    public String getLogin() {
-//        return login;
-//    }
-//
-//    public void setLogin(String login) {
-//        this.login = login;
-//    }
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
     public String getPassword() {
         return password;
