@@ -1,7 +1,6 @@
 package by.academy.homework4;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
 class CustomDate {
 

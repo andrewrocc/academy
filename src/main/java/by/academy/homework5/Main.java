@@ -83,7 +83,6 @@ class Main {
         List<Integer> studentsMarksList = Arrays.stream(new Random().ints(20, 1,10).toArray()).boxed().toList();
         ArrayList<Integer> studentsMarks = new ArrayList<>(studentsMarksList);
         System.out.println(studentsMarks);
-//        System.out.println(studentsMarks.stream().max(Integer::compare).get());
         Iterator<Integer> marksIterator = studentsMarks.iterator();
         int maxMark = 0;
         while (marksIterator.hasNext()) {

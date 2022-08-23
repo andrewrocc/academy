@@ -39,9 +39,9 @@ class DynamicArrayT<T> {
 
         if (capacity() < size)
             ensureCapacity(size + 1);
-        int move_count = size - index;
-        if(move_count > 0)
-            System.arraycopy(storage, index, storage, index + 1, move_count);
+        int moveCount = size - index;
+        if(moveCount > 0)
+            System.arraycopy(storage, index, storage, index + 1, moveCount);
 
         storage[index] = value;
         size++;
