@@ -48,10 +48,10 @@ class DynamicArrayT<T> {
     }
 
     public void ensureCapacity(int min_capacity) {
-        int old_capacity = storage.length;
-        if (min_capacity > old_capacity) {
-            int new_capacity = old_capacity + (old_capacity >> 1);
-            storage = Arrays.copyOf(storage, new_capacity);
+        int oldCapacity = storage.length;
+        if (min_capacity > oldCapacity) {
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            storage = Arrays.copyOf(storage, newCapacity);
         }
     }
 
