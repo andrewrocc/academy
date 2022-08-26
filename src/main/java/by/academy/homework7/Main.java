@@ -13,7 +13,7 @@ class Main {
     public static void main(String[] args) {
 //        task_1();
 //        task_2();
-
+        // for run task 3 -> open academy/src/test/java/testHomeWork7/MainTest.java
     }
 
     private static void task_2() throws RuntimeException {
