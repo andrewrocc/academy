@@ -23,10 +23,10 @@ class User extends Person {
     }
 
     private void printUserInfo() {
-        System.out.println(getFirstName() + "\n" + getLastName()
-                            + "\n" + getAge() + "\n" + getBirthDate()
-                            + "\n" + getLogin() + "\n" + getEmail() + "\n" +
-                password.replaceAll(password, "*".repeat(password.length())));
+        System.out.println("[ " + getFirstName() + ", " + getLastName()
+                            + ", " + getAge() + ", " + getBirthDate()
+                            + ", " + getLogin() + ", " + getEmail() + ", " +
+                password.replaceAll(password, "*".repeat(password.length())) + " ]");
     }
 
     //region prop

@@ -12,7 +12,8 @@ import java.lang.reflect.InvocationTargetException;
 class Main {
     public static void main(String[] args) {
 //        task_1();
-        task_2();
+//        task_2();
+
     }
 
     private static void task_2() throws RuntimeException {
@@ -21,36 +22,15 @@ class Main {
             User hackUser;
             User adminUser;
 
-//            Method[] userClassAllPublicMethods = userClass.getMethods();
-//            System.out.println("Use by getMethods(): " + Arrays.toString(userClassAllPublicMethods).replace(", ", "\n"));
-//
-//            var meth = userClass.getMethod("getPassword", null);
-//            System.out.println(meth.getName() + Arrays.toString(meth.getParameterTypes()));
-//
-//            Field[] userClassAllPublicFields = userClass.getFields();
-//            System.out.println("Use by getFields(): " + Arrays.toString(userClassAllPublicFields).replace(", ", "\n"));
-//
-//            Field userClassPublicField = userClass.getField("email");
-//            System.out.println(userClassPublicField);
-//
-//            Method[] userClassAllPrivateMethods = userClass.getDeclaredMethods();
-//            System.out.println("Use by getDeclaredMethods(): " + Arrays.toString(userClassAllPrivateMethods).replace(", ", "\n"));
-//
-//            var private_meth = userClass.getDeclaredMethod("printUserInfo", null);
-//            System.out.println(private_meth.getName() + Arrays.toString(private_meth.getParameterTypes()));
-//
-//            Field[] userClassPrivateFields = userClass.getDeclaredFields();
-//            System.out.println("Use by getDeclaredFields(): " + Arrays.toString(userClassPrivateFields).replace(", ", "\n"));
-//
-//            Field userClassPrivateField = userClass.getDeclaredField("password");
-//            System.out.println(userClassPrivateField);
-
-
             // set value using constructor
             Class[] params = { String.class, String.class, short.class, LocalDate.class, String.class,
                                 String.class, String.class};
             hackUser = (User) userClass.getConstructor(params).newInstance("Jhon", "Doe", (short)30,
                     LocalDate.of(2000, 01, 10), "admin", "89000", "jhonDoeNameless@mail.com");
+
+            Method privateMethod = hackUser.getClass().getDeclaredMethod("printUserInfo");
+            privateMethod.setAccessible(true);
+            privateMethod.invoke(hackUser);
 
             Class aUser = Class.forName(User.class.getName());
             adminUser = (User) aUser.getConstructor().newInstance();
@@ -69,8 +49,6 @@ class Main {
             publicFieldEmail.set(hackUser, "admin890098@mail.com");
             System.out.println(publicFieldEmail.get(hackUser));
 
-            Method privateMethod = adminUser.getClass().getDeclaredMethod("printUserInfo");
-            privateMethod.setAccessible(true);
             privateMethod.invoke(adminUser);
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException
                  | InvocationTargetException | ClassNotFoundException | InstantiationException ex) {

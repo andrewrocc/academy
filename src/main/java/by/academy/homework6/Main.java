@@ -64,7 +64,7 @@ class Main {
         int randomValue = 0;
         // sry i am not creating 100 files as needed, but i suppose 10 files are enough
         for (int i = 0; i < 10; i++) {
-            randomValue = rand.nextInt(1, 576);
+            randomValue = rand.nextInt(1, 574);
             namelessFileName = (i + 1) + "_" + randomValue +".txt";
             namelessFilePath = PATH_100_NAMELESS_FILE.concat(namelessFileName);
             createFile(namelessFilePath);
