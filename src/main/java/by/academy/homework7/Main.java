@@ -5,13 +5,15 @@ import java.time.LocalDate;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.function.Function;
+import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.stream.Stream;
 
 class Main {
     public static void main(String[] args) {
-//        task_1();
+        task_1();
 //        task_2();
         // for run task 3 -> open academy/src/test/java/testHomeWork7/MainTest.java
     }
@@ -57,9 +59,10 @@ class Main {
     }
 
     private static void task_1() {
-        var res = LongStream.generate(new Random()::nextInt).limit(100)
+        Random rnd = new Random();
+        var res = LongStream.generate(() -> rnd.nextLong(0, 100)).limit(100)
                 .mapToDouble((x) -> x * Math.PI - 20).filter(x -> x < 100).sorted().skip(3)
-                .boxed().collect(Collectors.toMap(Function.identity(), v -> "Number " + v));
+                .boxed().collect(Collectors.toMap(Function.identity(), v -> "Number " + v, (k, v) -> k));
 
         for (var set : res.entrySet()) {
             System.out.printf("%,.2f -> %s\n", set.getKey(), set.getValue());
