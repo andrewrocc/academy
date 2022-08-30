@@ -5,11 +5,9 @@ import java.time.LocalDate;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.function.Function;
-import java.util.function.LongSupplier;
-import java.util.stream.Collectors;
 import java.util.stream.LongStream;
+import java.util.stream.Collectors;
 import java.lang.reflect.InvocationTargetException;
-import java.util.stream.Stream;
 
 class Main {
     public static void main(String[] args) {
