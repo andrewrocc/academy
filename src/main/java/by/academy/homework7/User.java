@@ -1,6 +1,7 @@
 package by.academy.homework7;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 class User extends Person {
 
@@ -54,4 +55,24 @@ class User extends Person {
         this.email = email;
     }
     //endregion
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        if (!Objects.equals(login, user.login)) return false;
+        if (!Objects.equals(password, user.password)) return false;
+        return Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = login != null ? login.hashCode() : 0;
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        return result;
+    }
 }
