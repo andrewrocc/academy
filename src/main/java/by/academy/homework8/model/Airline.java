@@ -1,15 +1,14 @@
 package by.academy.homework8.model;
 
-import by.academy.homework8.serice.SortByRange;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Airline {
 
     private String airlineBrand;
 
-    private List<Plane> planeList;
+    private final List<Plane> planeList;
 
     public Airline(String airlineBrand, List<Plane> planeList) {
         this.airlineBrand = airlineBrand;
@@ -25,7 +24,7 @@ public class Airline {
     }
 
     public void sortPlanesByRange() {
-        planeList.sort(new SortByRange());
+        planeList.sort(Comparator.comparingDouble(Plane::getFlightRange));
     }
 
     public void getTotalCargoPassengerCapacity() {

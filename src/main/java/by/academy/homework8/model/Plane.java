@@ -1,5 +1,7 @@
 package by.academy.homework8.model;
 
+import java.util.Objects;
+
 abstract public class Plane {
 
     //region fields
@@ -22,6 +24,8 @@ abstract public class Plane {
         this.flightRange = flightRange;
         this.fuelConsumption = fuelConsumption;
     }
+
+    public Plane() { }
 
     //region properties
     abstract double getWeightCapacity();
@@ -73,7 +77,6 @@ abstract public class Plane {
     }
     //endregion
 
-
     @Override
     public String toString() {
         return "Plane{" +
@@ -85,5 +88,31 @@ abstract public class Plane {
                 ", seats capacity= " + getSeatsCapacity() +
                 ", fuelConsumption= " + fuelConsumption +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Plane plane)) return false;
+
+        if (Double.compare(plane.flightRange, flightRange) != 0) return false;
+        if (Double.compare(plane.fuelConsumption, fuelConsumption) != 0) return false;
+        if (!Objects.equals(planeBrand, plane.planeBrand)) return false;
+        if (!Objects.equals(planeModel, plane.planeModel)) return false;
+        return Objects.equals(planeSerialNumber, plane.planeSerialNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = planeBrand != null ? planeBrand.hashCode() : 0;
+        result = 31 * result + (planeModel != null ? planeModel.hashCode() : 0);
+        result = 31 * result + (planeSerialNumber != null ? planeSerialNumber.hashCode() : 0);
+        temp = Double.doubleToLongBits(flightRange);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(fuelConsumption);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }

@@ -1,10 +1,34 @@
 package by.academy.homework8;
 
 import by.academy.homework8.model.*;
+import by.academy.homework8.service.FileIOService;
 
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 class Main {
+
+    public static ArrayList<Plane> planePark = new ArrayList<>();
+
+    private static final String PATH = Paths.get("").toAbsolutePath().toString().concat("\\planesData.xml");
+
+
+    static {
+        FileIOService fileService = new FileIOService(PATH);
+        try {
+            fileService.saveData();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        try {
+            planePark = fileService.loadData();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
 //        task_1();
         task_2();
@@ -17,15 +41,6 @@ class Main {
 
         Использовать возможности ООП. */
     public static void task_2() {
-        PassengerPlane airbusA320 = new PassengerPlane("Airbus", "A320", "20150510_A4532", 4010.0, 2400, 8510.50, 180);
-        PassengerPlane boeing777 = new PassengerPlane("Boeing", "777", "12122010-MB2314", 9100.0,  6100.0, 15_660.0, 400);
-        WideBodyPlane airbusA350 = new WideBodyPlane("Airbus", "A350-1000", "10022005T35656G", 16100.0, 5800.0, 480);
-        CargoPlane airbus380 = new CargoPlane("Airbus", "380", "23102012-23K04RK", 15_400.0, 4670.0, 560_000);
-        ArrayList<Plane> planePark = new ArrayList<>();
-        planePark.add(airbusA320);
-        planePark.add(boeing777);
-        planePark.add(airbusA350);
-        planePark.add(airbus380);
         Airline emirates = new Airline("Fly Emirates", planePark);
         System.out.println(emirates);
         System.out.println(emirates.getPlaneByFuelConsumption(4000, 6000));

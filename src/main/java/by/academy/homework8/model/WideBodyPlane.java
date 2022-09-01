@@ -10,6 +10,11 @@ public class WideBodyPlane extends Plane {
         this.seatsCapacity = seatsCapacity;
     }
 
+    public WideBodyPlane() {
+        super();
+    }
+
+    //region prop
     @Override
     double getWeightCapacity() {
         return 0;
@@ -26,5 +31,22 @@ public class WideBodyPlane extends Plane {
     @Override
     public void setSeatsCapacity(int seatsCapacity) {
         this.seatsCapacity = seatsCapacity;
+    }
+    //endregion
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WideBodyPlane that)) return false;
+        if (!super.equals(o)) return false;
+
+        return seatsCapacity == that.seatsCapacity;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + seatsCapacity;
+        return result;
     }
 }

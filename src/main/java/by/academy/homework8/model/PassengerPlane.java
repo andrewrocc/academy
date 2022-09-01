@@ -13,6 +13,11 @@ public class PassengerPlane extends Plane {
         this.seatsCapacity = seatsCapacity;
     }
 
+    public PassengerPlane() {
+        super();
+    }
+
+    //region prop
     @Override
     double getWeightCapacity() {
         return weightCapacity;
@@ -31,5 +36,26 @@ public class PassengerPlane extends Plane {
     @Override
     public void setSeatsCapacity(int seatsCapacity) {
         this.seatsCapacity = seatsCapacity;
+    }
+    //endregion
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PassengerPlane that)) return false;
+        if (!super.equals(o)) return false;
+
+        if (Double.compare(that.weightCapacity, weightCapacity) != 0) return false;
+        return seatsCapacity == that.seatsCapacity;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        long temp;
+        temp = Double.doubleToLongBits(weightCapacity);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + seatsCapacity;
+        return result;
     }
 }
