@@ -50,20 +50,27 @@ public class Main {
     }
 
     public static void task_1() {
-        char[] string_one = scan.nextLine().toCharArray();
-        char[] string_two = scan.nextLine().toCharArray();
-        if (string_one.length != string_two.length){
-            System.out.println("false");
-            return;
+        String str1 = scan.nextLine();
+        String str2 = scan.nextLine();
+
+        boolean result = true;
+        if (str1.length() != str2.length()) {
+            result = false;
+        } else {
+            int[] letters = new int[256];
+            char[] str1_array = str1.toCharArray();
+            for (char c : str1_array) {
+                letters[c]++;                   // (int) c
+            }
+
+            for (int i = 0; i < str2.length(); i++) {
+                int c = str2.charAt(i);         // (int) c
+                if (--letters[c] < 0) {
+                    result = false;
+                }
+            }
         }
-        char result = '\u0000';
-        char[] array_result = new char[string_one.length * 2];
-        System.arraycopy(string_one, 0, array_result, 0, string_one.length);
-        System.arraycopy(string_two, 0, array_result, string_one.length, string_two.length);
-        for (char c : array_result) {
-            result ^= c;
-        }
-        System.out.println(result == '\u0000');
+        System.out.println(result);
     }
 
     public static void task_2() {
